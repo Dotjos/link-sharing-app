@@ -1,5 +1,11 @@
+import Navbar from "./ui/Navbar";
+
 function Applayout() {
-  return <div>Applayout</div>;
+  return (
+    <div className="">
+      <Navbar />
+    </div>
+  );
 }
 
 export default Applayout;
