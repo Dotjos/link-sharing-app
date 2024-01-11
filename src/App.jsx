@@ -9,11 +9,11 @@ const router = createBrowserRouter([
     path: "",
     element: <Applayout />,
     children: [
-      { path: "previewPage", element: <PreviewPage /> },
       { path: "/", element: <Page /> },
+      { path: "/profilePage", element: <ProfilePage /> },
     ],
   },
-  { path: "profilePage", element: <ProfilePage /> },
+  { path: "/previewPage", element: <PreviewPage /> },
 ]);
 
 function App() {
