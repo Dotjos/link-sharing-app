@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+nav .active {
+  @apply bg-LavenderMist py-2 px-4 text-NeonBlue rounded-lg;
+}

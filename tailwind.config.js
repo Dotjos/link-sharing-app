@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        "Lavender Mist": "#EFEBFF",
+        LavenderMist: "#EFEBFF",
         MaximumBluePurple: "#BEADFF",
         NeonBlue: "#633CFF",
         DarkCharcoal: "#333333",

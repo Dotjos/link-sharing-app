@@ -1,15 +1,15 @@
-import { NavLink } from "react-router-dom";
+import PrevRoute from "../ui/PrevRoute";
 
 function ProfileNav() {
   return (
     <div className="w-full md:absolute md:top-4">
-      <nav className="flex justify-between bg-white  md:p-2 ml-auto mr-auto   md:w-11/12  md:rounded-xl md:border">
-        <NavLink to="/" className="border border-NeonBlue rounded-lg px-4 py-1">
-          Back to editor
-        </NavLink>
-        <NavLink className="border rounded-lg px-4 border-NeonBlue py-1 bg-NeonBlue text-white">
-          Share Link
-        </NavLink>
+      <nav className="flex text-NeonBlue justify-between bg-white  md:p-2 ml-auto mr-auto   md:w-11/12  md:rounded-xl md:border">
+        <PrevRoute to="/">
+          <span>Back to editor</span>
+        </PrevRoute>
+        <PrevRoute to="/" share={true}>
+          <span>Share Link</span>
+        </PrevRoute>
       </nav>
     </div>
   );
