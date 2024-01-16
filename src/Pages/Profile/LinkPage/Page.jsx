@@ -1,11 +1,11 @@
 function Page() {
   return (
-    <div className="w-full flex">
-      <div className="relative hidden lg:inline-block w-2/3 h-full bg-white rounded-lg">
-        <img src="illustration-phone-mockup.svg" />
+    <div className="w-full flex justify-between">
+      <div className="relative hidden w-2/5 lg:flex items-center justify-center item h-screen bg-white rounded-lg p-4">
+        <img src="illustration-phone-mockup.svg" className="w-1/2" />
       </div>
-      <div className="text-sm text-Nickel">
-        <div className=" rounded-t-lg border-b bg-white w-full h-full px-3 py-4">
+      <div className="text-sm text-Nickel md:w-7/12">
+        <div className="rounded-t-lg border-b bg-white w-full h-full px-3 lg:px  py-4">
           <h1 className="font-bold text-xl mb-3 text-DarkCharcoal">
             Customize your links
           </h1>

@@ -3,9 +3,10 @@ import Navbar from "./ui/Navbar";
 
 function Applayout() {
   return (
-    <div className="">
+    <div className="lg:p-4">
       <Navbar />
-      <main className="p-3">
+      <main className="p-3 lg:px-0">
+        
         <Outlet />
       </main>
     </div>
