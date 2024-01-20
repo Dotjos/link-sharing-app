@@ -11,7 +11,7 @@ function Navbar() {
         <img src="logo-devlinks-large.svg" className="hidden md:inline-block" />
       </div>
       <div className="flex gap-7">
-        <NavRoutes to="/">
+        <NavRoutes to="/linkPage">
           <LuLink />
           <span className="hidden md:inline-block">Links</span>
         </NavRoutes>

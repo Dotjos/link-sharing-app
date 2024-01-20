@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import Navbar from "./ui/Navbar";
 import Phoneview from "./Components/Phoneview";
 
@@ -10,6 +10,7 @@ function Applayout() {
       <main className="p-3 lg:px-0 lg:flex lg:justify-between">
         <Phoneview/>
         <Outlet />
+        <NavLink to="/">Outside sha</NavLink>
       </main>
     </div>
   );
