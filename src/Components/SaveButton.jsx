@@ -1,7 +1,7 @@
 
-function SaveButton ({active,text}){
+function SaveButton ({active,text,small}){
   return (
-        <button className={`w-full md:w-1/12 ${active?"bg-NeonBlue":"bg-MaximumBluePurple"}  rounded-md py-2 text-whiteFA`}>{text}</button> 
+        <button className={`w-full ${small?"md:w-1/12":""}  ${active?"bg-NeonBlue":"bg-MaximumBluePurple"}  rounded-md py-2 text-whiteFA`}>{text}</button> 
   );
 }
 
