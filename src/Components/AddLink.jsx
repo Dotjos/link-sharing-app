@@ -1,21 +1,18 @@
 import Input from "./Input";
+import Option from "./Option";
 
 function AddLink (){
   return (
-    <div className="bg-whiteFA rounded-lg p-3 my-3 "> 
+    <div draggable={true} className="bg-whiteFA rounded-lg p-3 my-3"> 
     <div className="flex justify-between">
-      <span>Link #1</span>
+      <span>Link #{}</span>
       <button>Remove</button>
     </div>
 
     <div>
       <label htmlFor="">
        <select id="">
-         <option>1</option>
-         <option>2</option>
-         <option>3</option>
-         <option>3</option>
-         <option>6</option>
+         <Option value="github" src="icon-github.svg" platform="Github"/>
          </select>
       </label>
     </div>

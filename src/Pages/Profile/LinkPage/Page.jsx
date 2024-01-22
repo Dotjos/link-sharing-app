@@ -1,16 +1,12 @@
 import { useState } from "react";
 import SaveButton from "../../../Components/SaveButton";
 import StartLnkPage from "../../../Components/StartLnkPage";
-import AddLink from "../../../Components/AddLink";
 
 function Page() {
-  const [links, setLinks] = useState([]);
-  const [click,setClick]=useState(false)
-  const [noClick,setNoClicks]=useState(0)
+    const [click,setClick]=useState(false)
+  
   function handleClick(){
   setClick(true)
-  setNoClicks((prev)=>prev+1)
-  setLinks([...links, <AddLink key={noClick} />]);
 }
   
   return (
@@ -27,9 +23,11 @@ function Page() {
             + Add new link
           </button>
          {!click&&<StartLnkPage/>}
-         {links}
+         
         </div>
-          <SaveButton active={click}/>
+        <div className="p-5">
+          <SaveButton active={click} small={true} text="Save"/>
+        </div>
     </div>
   );
 }
