@@ -6,10 +6,10 @@ function SignInput ({icon,placeholder,type,label,name}){
         <span className="">{label}</span>   
             <div className="border rounded-lg hover:border-NeonBlue hover:shadow-MaximumBluePurple hover:shadow-md flex gap-3 p-2">
             <img src={icon}/>
-            <input id={name} type={type} className="w-full outline-none" placeholder={placeholder}/>
+            <input id={name} type={type} className="w-full outline-none bg-inherit" placeholder={placeholder}/>
             </div>
        </label>
-    </div>   
+    </div>
   );
 }
 

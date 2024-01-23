@@ -1,12 +1,13 @@
-import Input from "./Input";
+import SignInput from "../ui/SignInput";
 import Option from "./Option";
+import { LuLink } from "react-icons/lu";
 
-function AddLink (){
+function AddLink ({linkNum,onDelete,linkId}){
   return (
-    <div draggable={true} className="bg-whiteFA rounded-lg p-3 my-3"> 
+    <div draggable={true} className="bg-whiteFA transition-all duration-300 rounded-lg p-3 my-3"> 
     <div className="flex justify-between">
-      <span>Link #{}</span>
-      <button>Remove</button>
+      <span>Link #{linkNum+1}</span>
+      <button onClick={()=>onDelete(linkId)}>Remove</button>
     </div>
 
     <div>
@@ -17,7 +18,8 @@ function AddLink (){
       </label>
     </div>
    
-    <Input type="text" placeholder="e.ghttps://www.github.com/Dotjos"/>
+   <SignInput label="Link" icon="icon-link.svg" placeholder="e.g.https://www.github.com/Dotjos"/>
+    
     </div>
   );
 }

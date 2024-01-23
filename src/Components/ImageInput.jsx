@@ -1,6 +1,8 @@
+import {  IoImageOutline } from "react-icons/io5";
+
+
 import { useEffect, useState } from 'react';
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
-
 function ImageInput (){
   const [file, setFile] = useState(null);
   const [fileDataURL, setFileDataURL] = useState(null);
@@ -34,16 +36,15 @@ function ImageInput (){
 
   }, [file]);
 
-  return (
-    <>
-      <form>
+  return <div>
+    <form>
         <p>
           <input
             type="file"
             id='image'
             accept='.png, .jpg, .jpeg'
             onChange={changeHandler}
-            className='cursor-pointer h-32 w-full opacity-0'
+            className='cursor-pointer  border'
           />
         </p>
         
@@ -54,9 +55,8 @@ function ImageInput (){
             <img src={fileDataURL} alt="preview" className='' width="100" height="100" />
           }
         </p> : null}
-    </>
-  );
-        }
+  </div>
+}
 
 
   export default ImageInput;

@@ -1,6 +1,6 @@
 function Phoneview (){
   return (  
-       <div className="relative hidden h-screen w-2/5 lg:flex items-center justify-center item bg-white rounded-lg p-4">
+       <div className="relative hidden  w-2/5 lg:flex items-center justify-center item bg-white rounded-lg p-4">
         <img src="illustration-phone-mockup.svg" className="w-1/2" />
       </div>
   );

@@ -6,6 +6,8 @@ import Applayout from "./Applayout";
 import SignIn from "./Pages/SignIn";
 import Login from "./Pages/Login";
 import CreateAccount from "./Pages/CreateAccount";
+import Store from "./Store/Store";
+import { Provider } from "react-redux";
 
 const router = createBrowserRouter([
   {path:"/",element:<SignIn/>,
@@ -24,8 +26,12 @@ const router = createBrowserRouter([
   { path: "/previewPage", element: <PreviewPage /> },
 ]);
 
+
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+ < Provider store={Store}>
+  <RouterProvider router={router} />;
+ </Provider>)
 }
 
 export default App;
