@@ -8,6 +8,10 @@ import Login from "./Pages/Login";
 import CreateAccount from "./Pages/CreateAccount";
 import Store from "./Store/Store";
 import { Provider } from "react-redux";
+import  { Toaster } from 'react-hot-toast';
+import {  QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "./Async/queryStore";
+
 
 const router = createBrowserRouter([
   {path:"/",element:<SignIn/>,
@@ -29,9 +33,12 @@ const router = createBrowserRouter([
 
 function App() {
   return (
- < Provider store={Store}>
-  <RouterProvider router={router} />;
- </Provider>)
+    <QueryClientProvider client={queryClient}>
+    < Provider store={Store}>
+     <RouterProvider router={router} />;
+     <Toaster/>
+ </Provider>
+ </QueryClientProvider>)
 }
 
 export default App;
