@@ -3,20 +3,32 @@ import SaveButton from "../../../Components/SaveButton";
 import StartLnkPage from "../../../Components/StartLnkPage";
 import AddLink from "../../../Components/AddLink";
 import { generateRandomId } from "../../../utilis/generateId";
+import { useDispatch } from "react-redux";
+import { removeLink } from "../../../Store/LinkDetailsSlice";
 function Page() {
   const [noClick,setNoClick]=useState(0)
   const [linkTemp,setLinkTemp]=useState([])
+  const [saveClick,setSaveClick]=useState(false)
   const id=generateRandomId()
+  const dispatch=useDispatch()
+
+ function handleSaveClick(){
+  // setSaveClick(true)
+  console.log("Save Clicked");
+  
+ }
+
 
   function handleClick(){
   setNoClick(prev=>prev+1)
   setLinkTemp((prev)=>[...prev,{noClick,id}])
-  console.log(linkTemp);  
 }
+
   const handleDeleteLink = (linkId) => {
   // Filter out the link with the specified linkId
   const updatedLinks = linkTemp.filter((link) => link.id !== linkId);
   setLinkTemp(updatedLinks);
+  dispatch(removeLink(linkId))
   };
 
   return (
@@ -38,7 +50,7 @@ function Page() {
          ))}
         </div>
         <div className="p-5">
-          <SaveButton active={linkTemp.length===0?false:true} small={true} text="Save"/>
+          <SaveButton onClick={handleSaveClick} active={linkTemp.length===0?false:true} small={true} text="Save"/>
         </div>
     </div>
   );

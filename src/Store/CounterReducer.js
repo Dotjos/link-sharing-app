@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const counterSlice=createSlice({name:"AddClick",initialState:{clickCount:[]},reducers:{
+export const counterSlice=createSlice({name:"AddClick",
+initialState:{clickCount:[]},reducers:{
     increment:(state,action)=>{
         state.clickCount+=action.payload
     },

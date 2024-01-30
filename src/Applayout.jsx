@@ -2,6 +2,7 @@ import Navbar from "./ui/Navbar";
 import Phoneview from "./Components/Phoneview";
 import { Outlet } from "react-router-dom";
 function Applayout() {
+  
   return (
     <div className="lg:p-4">
       <Navbar />

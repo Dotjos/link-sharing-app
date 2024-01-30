@@ -1,15 +1,36 @@
 import SignInput from "../ui/SignInput";
-import Option from "./Option";
-import { LuLink } from "react-icons/lu";
-import Platforms from "./Platforms";
-
-const platformDetails=[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]
-
+import Platform from "../ui/Platform";
+import { useState } from "react";
+import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { MdOutlineKeyboardArrowUp } from "react-icons/md";
+import { useDispatch } from "react-redux";
+import { AddLinkDetails } from "../Store/LinkDetailsSlice";
+import { platformDetails } from "../utilitis/LinkInfo";
 
 function AddLink ({linkNum,onDelete,linkId}){
+  const [click,setClick]=useState(false)
+  const [selected,setSelected]=useState({
+    platform:"Github",
+    img: "icon-github.svg",
+    color:"Black",
+    link:"https://www.github.com"
+    })
+    const dispatch=useDispatch()
+    
+  function clickArrow(){
+    setClick(prev=>!prev)
+  }
+
+  function handleSelection(platform){
+    // console.log(platform);
+    setSelected(platform)
+    setClick(false)
+    dispatch(AddLinkDetails({linkId:linkId,details:platform}))
+  }
+
   return (
     <div draggable={true} className="bg-whiteFA transition-all duration-300 rounded-lg p-3 my-3"> 
-    <div className="flex justify-between">
+    <div className="flex justify-between mb-3">
       <div className="flex gap-1">
       <img src="icon-drag-and-drop.svg"/>
       <span className="font-bold">Link #{linkNum+1}</span>
@@ -19,19 +40,25 @@ function AddLink ({linkNum,onDelete,linkId}){
 
     <div>
       <div className="border p-2 gap-x-3 flex mb-3 bg-white rounded-lg">
-        <img src="icon-github.svg "/>
-        <div className="flex justify-between w-full">
-          <span>Github</span>
-          <img src="icon-arrow-right.svg" alt="icon-arrow-right.svg"/>
+        <img src={selected.img}/>
+        <div className="flex justify-between items-center w-full">
+          <span className="">{selected.platform}</span>
+          <button onClick={clickArrow}>
+          {click===true? <MdOutlineKeyboardArrowDown className="w-6 h-6"/>:<MdOutlineKeyboardArrowUp className="w-6 h-6"/> }
+          </button>
         </div>
       </div>
-     <Platforms/> 
-    </div>
 
-    
+      {click&&<ul className="bg-white list-image-none p-2  rounded-lg">
+        {platformDetails.map((platf)=>
+         <li  key={platf.link} className="py-2 border-b">
+        <Platform platform={platf.platform} icon={platf.img} handleSelected={()=>handleSelection(platf)}/>
+        </li>
+        )}
+      </ul>}
+    </div>
    
    <SignInput label="Link" icon="icon-link.svg" placeholder="e.g.https://www.github.com/Dotjos"/>
-    
     </div>
   );
 }

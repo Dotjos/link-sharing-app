@@ -1,9 +1,10 @@
 
-function Platform ({platform,icon,mb}){
+function Platform ({platform,icon,handleSelected}){
+  
   return (
-    <div className={`flex gap-x-5 py-1.5 ${mb&&"border-b"}`}>
+    <div className={`flex gap-x-5 border-b"}`} onClick={handleSelected} >
       <img src={icon} alt={icon}/>
-      <span>{platform}</span>
+      <span >{platform}</span>
     </div>
   );
 }
