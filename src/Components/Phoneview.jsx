@@ -10,7 +10,7 @@ function Phoneview (){
         <div className="w-full items-center flex justify-center relative">
         <img src="illustration-phone-mockup.svg" className="w-1/2"/>
         <div className="bg-white rounded-lg  bottom-4 w-5/12 h-2/3 overflow-y-auto absolute">
-          {addedLinks.map(addeDetails=><PhoneLink key={addeDetails.linkId} platform={addeDetails.details.platform}  background={addeDetails.details.color}/>)}
+          {addedLinks.map(addeDetails=><PhoneLink key={addeDetails.linkId} platform={addeDetails.details?.platform}  background={addeDetails.details?.color || "bg-LavenderMist"}/>)}
          </div>
         </div>
       </div>

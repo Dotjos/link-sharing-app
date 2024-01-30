@@ -1,33 +1,24 @@
-import { useState } from "react";
 import SaveButton from "../../../Components/SaveButton";
 import StartLnkPage from "../../../Components/StartLnkPage";
 import AddLink from "../../../Components/AddLink";
 import { generateRandomId } from "../../../utilis/generateId";
-import { useDispatch } from "react-redux";
-import { removeLink } from "../../../Store/LinkDetailsSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { createLinkObject, removeLink, saveLink } from "../../../Store/LinkDetailsSlice";
 function Page() {
-  const [noClick,setNoClick]=useState(0)
-  const [linkTemp,setLinkTemp]=useState([])
-  const [saveClick,setSaveClick]=useState(false)
-  const id=generateRandomId()
+ const linkTemp = useSelector(state=>state.LinkDetailsSlice.LinkDetails)
   const dispatch=useDispatch()
-
- function handleSaveClick(){
-  // setSaveClick(true)
-  console.log("Save Clicked");
   
+  function handleSaveClick(){
+  console.log("Save Clicked");
+  dispatch(saveLink())
  }
 
-
-  function handleClick(){
-  setNoClick(prev=>prev+1)
-  setLinkTemp((prev)=>[...prev,{noClick,id}])
+function handleClick(){
+  dispatch(createLinkObject(generateRandomId()))
 }
 
   const handleDeleteLink = (linkId) => {
   // Filter out the link with the specified linkId
-  const updatedLinks = linkTemp.filter((link) => link.id !== linkId);
-  setLinkTemp(updatedLinks);
   dispatch(removeLink(linkId))
   };
 
@@ -44,9 +35,9 @@ function Page() {
           <button className="my-3 w-full border-NeonBlue p-2 border rounded-lg text-NeonBlue" onClick={handleClick} >
             + Add new link
           </button>
-         {!noClick&&<StartLnkPage/>}
+         {linkTemp.length === 0&&<StartLnkPage/>}
          {linkTemp.length > 0 && linkTemp.map((link, index) => (
-         <AddLink key={index} linkNum={index} linkId={link.id} onDelete={handleDeleteLink}/>
+         <AddLink key={index}  linkNum={index} linkId={link.linkId} onDelete={()=>handleDeleteLink(link.linkId)}/>
          ))}
         </div>
         <div className="p-5">

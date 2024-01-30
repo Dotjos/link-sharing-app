@@ -4,25 +4,26 @@ import { useState } from "react";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { MdOutlineKeyboardArrowUp } from "react-icons/md";
 import { useDispatch } from "react-redux";
-import { AddLinkDetails } from "../Store/LinkDetailsSlice";
+import { AddLinkDetails, addPersonaLink } from "../Store/LinkDetailsSlice";
 import { platformDetails } from "../utilitis/LinkInfo";
 
 function AddLink ({linkNum,onDelete,linkId}){
   const [click,setClick]=useState(false)
-  const [selected,setSelected]=useState({
-    platform:"Github",
-    img: "icon-github.svg",
-    color:"Black",
-    link:"https://www.github.com"
-    })
-    const dispatch=useDispatch()
-    
+  const [linkInput,setLinkInput]=useState("")
+  const [selected,setSelected]=useState({})
+  const dispatch=useDispatch()
+
+  function handleLinkInput(e){
+    setLinkInput(e.target.value)
+    const LinkObj={linkInput,linkId}
+    dispatch(addPersonaLink(LinkObj))
+  }
+
   function clickArrow(){
     setClick(prev=>!prev)
   }
 
   function handleSelection(platform){
-    // console.log(platform);
     setSelected(platform)
     setClick(false)
     dispatch(AddLinkDetails({linkId:linkId,details:platform}))
@@ -42,7 +43,7 @@ function AddLink ({linkNum,onDelete,linkId}){
       <div className="border p-2 gap-x-3 flex mb-3 bg-white rounded-lg">
         <img src={selected.img}/>
         <div className="flex justify-between items-center w-full">
-          <span className="">{selected.platform}</span>
+          <span className="">{selected.platform?selected.platform:"Select platform here"}</span>
           <button onClick={clickArrow}>
           {click===true? <MdOutlineKeyboardArrowDown className="w-6 h-6"/>:<MdOutlineKeyboardArrowUp className="w-6 h-6"/> }
           </button>
@@ -50,15 +51,15 @@ function AddLink ({linkNum,onDelete,linkId}){
       </div>
 
       {click&&<ul className="bg-white list-image-none p-2  rounded-lg">
-        {platformDetails.map((platf)=>
-         <li  key={platf.link} className="py-2 border-b">
+        {platformDetails.map((platf,index)=>
+         <li  key={index} className="py-2 border-b">
         <Platform platform={platf.platform} icon={platf.img} handleSelected={()=>handleSelection(platf)}/>
         </li>
         )}
       </ul>}
     </div>
    
-   <SignInput label="Link" icon="icon-link.svg" placeholder="e.g.https://www.github.com/Dotjos"/>
+   <SignInput label="Link" disabled={!selected.platform} onChange={handleLinkInput} value={linkInput}  icon="icon-link.svg" placeholder="e.g.https://www.github.com/Dotjos"/>
     </div>
   );
 }
