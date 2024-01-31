@@ -24,24 +24,38 @@ export const LinkDetailsSlice=createSlice({
             linkToBeUPdated.details.linkInput = action.payload.linkInput;
           }
         },
-        saveLink:(state)=>{
-           state.LinkDetails.forEach(linkDetail=>{
-            if(!linkDetail.details.linkInput
-              ){
-            linkDetail.details.error="Can't be empty"
-          }
-           })
-        }
-        // saveLink: (state) => {
-        //   state.LinkDetails.forEach((linkDetail) => {
-        //     if (
-        //       !linkDetail.details.linkInput &&
-        //       !linkDetail.details.inputDisabled // Assuming there's a property indicating if the input is disabled
-        //     ) {
-        //       linkDetail.details.error = "Can't be empty";
-        //     }
-        //   });
-        // },
+        saveLink: (state) => {
+          state.LinkDetails.forEach((linkDetail) => {
+            if (!linkDetail.details || !linkDetail.details.linkInput) {
+              // Add the error message
+              linkDetail.details = {
+                ...linkDetail.details,
+                error: "Can't be empty",
+              };
+            }
+            else{
+              linkDetail.details = {
+                ...linkDetail.details,
+                error: "",
+              };
+            }
+
+            const platFormatRegex = linkDetail.details.platFormat.slice(1).replace(/^\/?/, '(https:\\/\\/)?');
+            const checkFormat = new RegExp(`^${platFormatRegex}`).test(linkDetail.details.linkInput);
+           if(!checkFormat){
+            linkDetail.details = {
+              ...linkDetail.details,
+              error: "Please check the url",
+            };
+           }else{
+            linkDetail.details = {
+              ...linkDetail.details,
+              error: "",
+            };
+           }
+           
+          });
+        },
 }
 })
 

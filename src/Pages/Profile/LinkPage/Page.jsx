@@ -5,9 +5,10 @@ import { generateRandomId } from "../../../utilis/generateId";
 import { useDispatch, useSelector } from "react-redux";
 import { createLinkObject, removeLink, saveLink } from "../../../Store/LinkDetailsSlice";
 function Page() {
- const linkTemp = useSelector(state=>state.LinkDetailsSlice.LinkDetails)
+  const linkTemp = useSelector(state=>state.LinkDetailsSlice.LinkDetails)
   const dispatch=useDispatch()
   
+
   function handleSaveClick(){
   console.log("Save Clicked");
   dispatch(saveLink())
@@ -37,7 +38,7 @@ function handleClick(){
           </button>
          {linkTemp.length === 0&&<StartLnkPage/>}
          {linkTemp.length > 0 && linkTemp.map((link, index) => (
-         <AddLink key={index}  linkNum={index} linkId={link.linkId} onDelete={()=>handleDeleteLink(link.linkId)}/>
+         <AddLink key={index} linkNum={index} linkId={link.linkId} onDelete={()=>handleDeleteLink(link.linkId)}/>
          ))}
         </div>
         <div className="p-5">
