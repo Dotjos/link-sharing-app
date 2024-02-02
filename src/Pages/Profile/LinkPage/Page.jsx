@@ -12,6 +12,7 @@ function Page() {
   function handleSaveClick(){
   console.log("Save Clicked");
   dispatch(saveLink())
+  console.log("https://www.gmail.com".slice("8"))
  }
 
 function handleClick(){

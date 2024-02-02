@@ -24,38 +24,38 @@ export const LinkDetailsSlice=createSlice({
             linkToBeUPdated.details.linkInput = action.payload.linkInput;
           }
         },
+   
         saveLink: (state) => {
-          state.LinkDetails.forEach((linkDetail) => {
-            if (!linkDetail.details || !linkDetail.details.linkInput) {
-              // Add the error message
-              linkDetail.details = {
-                ...linkDetail.details,
-                error: "Can't be empty",
-              };
-            }
-            else{
-              linkDetail.details = {
-                ...linkDetail.details,
-                error: "",
-              };
-            }
-
-            const platFormatRegex = linkDetail.details.platFormat.slice(1).replace(/^\/?/, '(https:\\/\\/)?');
-            const checkFormat = new RegExp(`^${platFormatRegex}`).test(linkDetail.details.linkInput);
-           if(!checkFormat){
-            linkDetail.details = {
-              ...linkDetail.details,
-              error: "Please check the url",
-            };
-           }else{
-            linkDetail.details = {
-              ...linkDetail.details,
-              error: "",
-            };
-           }
-           
-          });
+          return {
+            ...state,
+            LinkDetails: state.LinkDetails.map(linkDetail => {
+              if (!linkDetail.details || !linkDetail.details.linkInput) {
+                return {
+                  ...linkDetail,
+                  details: {
+                    ...linkDetail.details,
+                    error: "Can't be empty",
+                  },
+                };
+              } else {
+                const checkFormat = new RegExp(linkDetail.details.platFormat).test(linkDetail.details.linkInput);
+                return {
+                  ...linkDetail,
+                  details: {
+                    ...linkDetail.details,
+                    error: checkFormat ? "" : "Please check URL",
+                  },
+                };
+              }
+            }),
+          };
         },
+        
+
+
+
+
+
 }
 })
 
