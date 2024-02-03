@@ -4,25 +4,26 @@ import AddLink from "../../../Components/AddLink";
 import { generateRandomId } from "../../../utilis/generateId";
 import { useDispatch, useSelector } from "react-redux";
 import { createLinkObject, removeLink, saveLink } from "../../../Store/LinkDetailsSlice";
+
 function Page() {
   const linkTemp = useSelector(state=>state.LinkDetailsSlice.LinkDetails)
   const dispatch=useDispatch()
   
-
   function handleSaveClick(){
-  console.log("Save Clicked");
-  dispatch(saveLink())
-  console.log("https://www.gmail.com".slice("8"))
- }
-
+     dispatch(saveLink())
+   }
+ 
 function handleClick(){
   dispatch(createLinkObject(generateRandomId()))
 }
 
-  const handleDeleteLink = (linkId) => {
+const handleDeleteLink = (linkId) => {
   // Filter out the link with the specified linkId
   dispatch(removeLink(linkId))
-  };
+};
+
+  
+
 
   return (
     <div className="lg:w-7/12 text-sm text-Nickel bg-white rounded-lg">
@@ -37,10 +38,14 @@ function handleClick(){
           <button className="my-3 w-full border-NeonBlue p-2 border rounded-lg text-NeonBlue" onClick={handleClick} >
             + Add new link
           </button>
+        <div >
          {linkTemp.length === 0&&<StartLnkPage/>}
          {linkTemp.length > 0 && linkTemp.map((link, index) => (
-         <AddLink key={index} linkNum={index} linkId={link.linkId} onDelete={()=>handleDeleteLink(link.linkId)}/>
+            <AddLink key={index}  linkNum={index} linkId={link.linkId}  onDelete={()=>handleDeleteLink(link.linkId)}/> 
          ))}
+        </div>
+         
+
         </div>
         <div className="p-5">
           <SaveButton onClick={handleSaveClick} active={linkTemp.length===0?false:true} small={true} text="Save"/>

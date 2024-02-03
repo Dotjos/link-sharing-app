@@ -2,67 +2,68 @@ export const platformDetails=[
     {
     platform:"Github",
     img: "icon-github.svg",
-    color:"neutral-950",
-    platFormat:"www.github.com"
+    color:"bg-github",
+    platFormat: /^https?:\/\/www\.github\.com/
     },{
       platform:"Youtube",
       img: "icon-youtube.svg",
-      color:"LightRed",
-      platFormat:"www.youtube.com"
+      color:"bg-red-400",
+      platFormat: /^(https?:\/\/)?www\.youtube\.com/
     },{
       platform:"Frontend Mentor",
       img: "icon-frontend-mentor.svg",
-      color:"white",
-      platFormat:"www.frontendmentor.io"
+      color:"bg-frontendmentors",
+      platFormat: /^(https?:\/\/)?www\.frontendmentor\.io/
     },{
       platform:"X",
       img: "icon-twitter.svg",
-      color:"twitter",
-      platFormat:"www.twitter.com"
+      color:"bg-twitter",
+      platFormat: /^(https?:\/\/)?www\.twitter\.com/
     },{
       platform:"LinkedIn",
       img: "icon-linkedin.svg",
-      color:"LinkedIn",
-      platFormat:"www.linkedin.com"
+      color:"bg-LinkedIn",
+      platFormat: /^(https?:\/\/)?www\.linkedin\.com/
     },{
       platform:"Facebook",
       img: "icon-facebook.svg",
-      color:"facebook",
-      platFormat:"www.facebook.com"
+      color:"bg-facebook",
+      platFormat: /^(https?:\/\/)?www\.facebook\.com/
     },{
       platform:"Twitch",
       img: "icon-twitch.svg",
-      color:"twitch",
-      platFormat:"www.twitch.tv"
+      color:"bg-twitch",
+      platFormat: /^(https?:\/\/)?www\.twitch\.tv/
     },{
       platform:"Dev.to",
       img: "icon-devto.svg",
-      color:"DevTo",
-      platFormat:"www.dev.to"
+      color:"bg-DevTo",
+      platFormat: /^(https?:\/\/)?www\.dev\.to/
     },{
       platform:"Codewars",
       img: "icon-codewars.svg",
-      color:"Codeward",
-      platFormat:"www.codewars.io"
+      color:"bg-Codeward",
+      platFormat: /^(https?:\/\/)?www\.codewars\.io/
     },{
       platform:"freeCodeCamp",
       img: "icon-freecodecamp.svg",
-      color:"freeCodeCamp",
-      platFormat:"www.freecodecamp.org"
+      color:"bg-freeCodeCamp",
+      platFormat: /^(https?:\/\/)?www\.freecodecamp\.org/
+      
         },{
       platform:"GitLab",
       img: "icon-gitlab.svg",
-      color:" gitLab",
-      platFormat:"www.gitlab.com"
+      color:"bg-gitLab",
+      platFormat: /^(https?:\/\/)?www\.gitlab\.com/
     },{
       platform:"Hashnode",
       img: "icon-hashnode.svg",
-      color:"Hashnode",
-      platFormat:"www.hashnode.com"
+      color:"bg-Hashnode",
+      platFormat: /^(https?:\/\/)?www\.hashnode\.com/
     },{
       platform:"Stack Overflow",
       img: "icon-stack-overflow.svg",
-      color:"stackOverflow",
-      platFormat:"www.stackoverflow.com"
+      color:"bg-stackOverflow",
+      platFormat: /^(https?:\/\/)?www\.stackoverflow\.com/
     }
   ]

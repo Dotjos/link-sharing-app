@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
 export const LinkDetailsSlice=createSlice({
     name:"Added Link",initialState:{
         LinkDetails:[]},
@@ -24,7 +23,6 @@ export const LinkDetailsSlice=createSlice({
             linkToBeUPdated.details.linkInput = action.payload.linkInput;
           }
         },
-   
         saveLink: (state) => {
           return {
             ...state,
@@ -44,21 +42,31 @@ export const LinkDetailsSlice=createSlice({
                   details: {
                     ...linkDetail.details,
                     error: checkFormat ? "" : "Please check URL",
+                    link: checkFormat? linkDetail.details.linkInput : ""
                   },
                 };
               }
             }),
           };
         },
+        reOrganizeState:(state,action)=>{
+          const { sourceId, targetId } = action.payload;
+          const updatedLinkDetails = [...state.LinkDetails];
+          const sourceIndex = updatedLinkDetails.findIndex(link => link.linkId === sourceId);
+          const targetIndex = updatedLinkDetails.findIndex(link => link.linkId === targetId);
+
+
+          if (sourceIndex !== -1 && targetIndex !== -1) {
+            const [movedLink] = updatedLinkDetails.splice(sourceIndex, 1);
+            updatedLinkDetails.splice(targetIndex, 0, movedLink);
+          }
         
+          return { ...state, LinkDetails: updatedLinkDetails };
 
-
-
-
-
+        }
 }
 })
 
 
-export const {AddLinkDetails,removeLink,addPersonaLink,saveLink,createLinkObject}=LinkDetailsSlice.actions
+export const {AddLinkDetails,removeLink,addPersonaLink,saveLink,createLinkObject,reOrganizeState}=LinkDetailsSlice.actions
 export default LinkDetailsSlice.reducer

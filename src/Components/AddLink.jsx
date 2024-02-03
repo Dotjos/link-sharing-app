@@ -4,28 +4,66 @@ import { useEffect, useState } from "react";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { MdOutlineKeyboardArrowUp } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { AddLinkDetails, addPersonaLink } from "../Store/LinkDetailsSlice";
+import { AddLinkDetails, addPersonaLink, reOrganizeState } from "../Store/LinkDetailsSlice";
 import { platformDetails } from "../utilitis/LinkInfo";
+import { useDrag, useDrop } from "react-dnd";
 
 function AddLink ({linkNum,onDelete,linkId}){
+  const initialLinkInputFromRedux = useSelector((state) => {
+  const linkDetail = state.LinkDetailsSlice.LinkDetails.find(
+      (item) => item.linkId === linkId
+    );
+  return linkDetail?.details?.linkInput || '';
+  });
   const [click,setClick]=useState(false)
-  const [linkInput,setLinkInput]=useState("")
+  const [linkInput,setLinkInput]=useState(initialLinkInputFromRedux)
   const [selected,setSelected]=useState({})
   const dispatch=useDispatch()
   const reduxValue = useSelector((state) => state.LinkDetailsSlice.LinkDetails);
 
-  
-// My bad
-  // (function platFormSync(){
-  //   console.log(reduxValue);
-  //   setSelected(reduxValue.find(value=>value.linkId===linkId))
-  // })()
+    const [{isDragging},drag] = useDrag(()=>({
+       type:"template",
+       collect:(monitor)=>({
+          isDragging: !!monitor.isDragging()
+       }),
+       item:{linkId},
+       end:(item,monitor)=>{
+        handleDrop(item,monitor)
+       
+       }
+    }))
+
+    const [collectedProps, drop] = useDrop(() => ({
+      accept: "template",
+      drop: (item,monitor) => {
+        return {linkId}
+      },
+    
+    }));
+
+  // function  handleAccessDrop(item,monitor){
+  //   // console.log(item);
+  //   // console.log(monitor);
+  // }
+
+ function handleDrop(item,monitor){
+  const dropResult = monitor.getDropResult()
+  // console.log('toDetail',dropResult.linkId);
+  // console.log("fromDetail",item.linkId);
+  dispatch(reOrganizeState({sourceId:item.linkId,targetId:dropResult.linkId}))
+ }
+
+
+
+// Use useEffect to update the local state if the Redux value changes
+useEffect(() => {
+  setLinkInput(initialLinkInputFromRedux || '');
+}, [initialLinkInputFromRedux]);
 
   useEffect(() => {
     setSelected(reduxValue.find((value) => value.linkId === linkId));
-    console.log(reduxValue);
   }, [reduxValue, linkId]);
-  
+
   function handleLinkInput(e){
     const inputValue = e.target.value;
     setLinkInput(inputValue);
@@ -39,15 +77,13 @@ function AddLink ({linkNum,onDelete,linkId}){
   function handleSelection(platform){
     setClick(false)
     dispatch(AddLinkDetails({linkId:linkId,details:{...platform,linkInput}}))
-    console.log(linkId);
-    console.log(selected); 
   }
 
   return (
-    <div draggable={true} className="bg-whiteFA transition-all duration-300 rounded-lg p-3 my-3"> 
+    <div ref={drop} className="bg-whiteFA transition-all duration-300 rounded-lg p-3 my-3"> 
     <div className="flex justify-between mb-3">
-      <div className="flex gap-1">
-      <img src="icon-drag-and-drop.svg"/>
+      <div className="flex gap-3 items-center">
+      <img ref={drag} className="w-4 h-4" src="icon-drag-and-drop.svg"/>
       <span className="font-bold">Link #{linkNum+1}</span>
       </div>
       <button onClick={()=>onDelete(linkId)}>Remove</button>
@@ -73,7 +109,7 @@ function AddLink ({linkNum,onDelete,linkId}){
       </ul>}
     </div>
 
-   <SignInput label="Link" disabled={!selected.details} errMessage={selected.details?.error} onChange={handleLinkInput} value={selected.details?.linkInput?selected.details.linkInput:linkInput}   icon="icon-link.svg" placeholder="e.g.https://www.github.com/Dotjos"/>
+   <SignInput label="Link" disabled={!selected.details} errMessage={selected.details?.error} onChange={handleLinkInput} value={linkInput}   icon="icon-link.svg" placeholder="e.g.https://www.github.com/Dotjos"/>
     </div>
   );
 }
