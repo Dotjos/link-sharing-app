@@ -4,13 +4,14 @@ import toast from "react-hot-toast";
 
 export function getCreateAccount() {
   const { mutate: SignNew, status } = useMutation({
-    mutationFn: ( {email, password }) => SignNewUser(email, password),
+    mutationFn: ({ email, password }) =>{
+      return SignNewUser(email, password)},
     onSuccess: () => {
       toast.success("Successful, check your mail");
     },
     onError: (error) => {
-      console.error("Error during authentication:", error);
-      toast.error("Error, try again!!!");
+      toast.error("Kindly check your credentials or network")
+      // console.log(error.Error)
     },
   });
 
@@ -19,21 +20,4 @@ export function getCreateAccount() {
 
 
 
-
-
-
-// export function getCreateAccount (){
-// const { mutate:SignNew,status} = useMutation({
-//     mutationFn:({email,password})=>SignNewUser({email,password},
-//         onSuccess:()=>{
-//             toast.success("Successful,check your mail")
-//         },
-//         onError:(error)=>{
-//             console.error("Error during authentication:", error);
-//             toast.error("Error, try again!!!")}  
-//         )
-//     },
-//     )
-// return{SignNew,status}
-// }
 

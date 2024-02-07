@@ -3,7 +3,7 @@ import PhoneLink from "../ui/PhoneLink"
 
 function Phoneview (){
   const addedLinks = useSelector((state) => state.LinkDetailsSlice.LinkDetails);
-  console.log(addedLinks);
+
 
   return ( 
        <div className="hidden w-2/5 lg:flex items-center justify-center bg-white rounded-lg p-4">

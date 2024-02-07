@@ -48,8 +48,6 @@ function AddLink ({linkNum,onDelete,linkId}){
 
  function handleDrop(item,monitor){
   const dropResult = monitor.getDropResult()
-  // console.log('toDetail',dropResult.linkId);
-  // console.log("fromDetail",item.linkId);
   dispatch(reOrganizeState({sourceId:item.linkId,targetId:dropResult.linkId}))
  }
 

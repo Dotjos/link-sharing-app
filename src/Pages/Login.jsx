@@ -6,32 +6,52 @@ import getSignedIn from "../Async/getSignedIn";
 
 
 function Login (){
-  const [credInput,setCredInput]=useState({email:"",password:""})
-  // const {signInWithEmail,status}=getSignedIn()
-  function handleInput(event){
-  setCredInput((prev) => {
-    return {
-      ...prev,
-      [event.target.name]: event.target.value,
-    };
-  });
-  console.log(credInput);
+  const [email,setEmail]=useState("")
+  const [password,setPassword]=useState("")
+  const [error,setError]=useState( {emailError:"",passwordError:""})
+  
+  const {signIn,status}=getSignedIn()
+
+  function handleEmailInput(e){
+    setEmail(e.target.value)  
    }
+
+  function handlePasswordInput(e){
+    setPassword(e.target.value)    
+  }
 
 function onSubmit(event){
   event.preventDefault()
-  // signInWithEmail(credInput.email,credInput.password)
-  console.log(credInput.email,credInput.password);
+
+  if (email.trim() === "") {
+    setError((prevError) => ({ ...prevError, emailError: "Can't be empty" }));
+  }else{
+    setError((prevError) => ({ ...prevError, emailError: "" }));
+  }
+
+  if (password.trim() === "") {
+    setError((prevError) => ({ ...prevError, passwordError: "Can't be empty" }));
+  } else if (password.length < 8) {
+    setError((prevError) => ({ ...prevError, passwordError: "Please check again" }));
+  } else {
+    setError((prevError) => ({ ...prevError, passwordError: "" }));
+  }
+
+  const formValid = email.trim() !== "" && password.trim() !== "" && !error.emailError && !error.passwordError;
+if(formValid){
+  signIn({email,password})
+}
   
 }
+
   return (
     <div>
       <h1 className="font-bold text-xl text-DarkCharcoal my-3">Login</h1>
       <p className="">Add your deatils below to get back into the app.</p>
       <form>
-          <SignInput label="Email address" name="email" type="email" onChange={handleInput} value={credInput.name} icon="icon-email.svg" placeholder="e.g.oladotjos@gmail.com"/>
-          <SignInput label="Password" name="password" type="password" onChange={handleInput} value={credInput.password} icon="icon-password.svg" placeholder="Enter your password"/>
-          <SaveButton onClick={onSubmit} text="Login"  active="false" small={false}/>
+          <SignInput label="Email address" error={error.emailError} errMessage={error.emailError} name="email" type="email" onChange={handleEmailInput} value={email} icon="icon-email.svg" placeholder="e.g.oladotjos@gmail.com"/>
+          <SignInput label="Password" error={error.passwordError} errMessage={error.passwordError} name="password" type="password" onChange={handlePasswordInput} value={password} icon="icon-password.svg" placeholder="Enter your password"/>
+          <SaveButton onClick={onSubmit} text="Login"  active={status!=="pending"} small={false}/>
       </form>
       
       <div className="grid md:flex text-center my-6 items-center justify-center">

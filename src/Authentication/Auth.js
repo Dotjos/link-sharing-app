@@ -1,18 +1,18 @@
 import { supabase } from "../Supabase";
 
-export async function signInWithEmail(email,password) {
+export async function signInWithEmail({email,password}) {
     try{
         const { user, error } = await supabase.auth.signInWithPassword({
             email: email,
             password: password,
         })
         if (error){
-            throw new Error(`Authentication failed:${error.message}`)
+            throw new Error(error.message)
         }
-        console.log('Authentication successful:', user);
         return user
     }catch(error){
         console.error(error)
+        throw error
     }
 }
 
@@ -24,7 +24,7 @@ export async function SignNewUser( email, password ) {
         password: password,
       });
       if (error) {
-        throw new Error(`Authentication failed: ${error.message}`);
+        throw new Error(error.message);
       }
   
       console.log("Sign up successful:", data);
@@ -54,5 +54,6 @@ export  async function signOut() {
         }
     } catch (error) {
         console.error(error)
+        throw error
     }
 }

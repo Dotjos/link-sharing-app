@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from "react-router-dom";
+import {  Outlet } from "react-router-dom";
 
 function SignIn (){
   return (
@@ -7,9 +7,7 @@ function SignIn (){
       <main className="mt-14 md:w-2/4 bg-white md:p-7 md:rounded-lg">
         <Outlet/>
       </main>
-      <footer>
-        <NavLink to="/linkPage">enter sha</NavLink>
-      </footer>
+      
     </div>
   );
 }

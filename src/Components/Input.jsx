@@ -1,9 +1,15 @@
 
-function Input ({type,label,placeholder,id,asteriks,required}){
+function Input ({type,label,placeholder,id,asteriks,required,onChange,value,errText}){
   return (
     <div className="md:flex justify-between items-center mb-3">
-     <label className="" htmlFor={id}>{label}{asteriks&&"*"}</label> 
-      <input required={required} type={type} id={id} placeholder={placeholder} className="flex my-1 md:my-0 p-2.5 w-full  md:w-2/4 mb-2 focus:outline-none focus:border-NeonBlue focus:shadow-MaximumBluePurple focus:shadow bg-white rounded-lg border border-LavenderMist"/>
+      <div className="flex justify-between">
+        <label className="" htmlFor={id}>{label}{asteriks&&"*"}</label> 
+        <span className="text-xs text-red-400 md:hidden">{errText}</span>
+      </div>
+      <div className={`flex justify-between items-center border ${errText?"border-red-400":""} md:w-3/4 border-LavenderMist rounded-lg  hover:border-NeonBlue hover:shadow-MaximumBluePurple  focus:shadow bg-white`}>
+         <input required={required}  type={type} id={id} value={value} onChange={(e)=>onChange(e)} placeholder={placeholder} className={`w-full py-2.5 px-2 md:w-3/4 selection:bg-transparent rounded-l-lg bg-inherit focus:outline-none`}/>
+            <span className="text-red-400 text-xs hidden md:inline-block px-2">{errText}</span>
+      </div>
     </div>   
   );
 }
