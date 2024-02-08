@@ -35,17 +35,6 @@ export async function SignNewUser( email, password ) {
     }
   }
   
-
-
-
-
-
-
-
-
-
-
-
 export  async function signOut() {
     try {
         const { error } = await supabase.auth.signOut() 
@@ -56,4 +45,14 @@ export  async function signOut() {
         console.error(error)
         throw error
     }
+}
+
+export async function getCurrentUser() {
+  const { data: session } = await supabase.auth.getSession();
+
+  if (!session.session) return null;
+  const { data, error } = await supabase.auth.getUser();
+  if (error) throw new Error(error.message);
+
+  return data?.user;
 }
