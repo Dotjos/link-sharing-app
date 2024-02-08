@@ -12,6 +12,8 @@ function CreateAccount (){
   const [passwordLengthError, setPasswordLengthError] = useState(false)
   const [passwordMatchError, setPasswordMatchError] = useState(false);
   const {SignNew,status} =  getCreateAccount()
+
+  
   const arePasswordsMatching = password1===password2
   
   const handleEmail = (e) => {

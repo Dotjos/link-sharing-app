@@ -4,7 +4,6 @@ import SignInput from "../ui/SignInput";
 import { useState } from "react";
 import getSignedIn from "../Async/getSignedIn";
 
-
 function Login (){
   const [email,setEmail]=useState("")
   const [password,setPassword]=useState("")

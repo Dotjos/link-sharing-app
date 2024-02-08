@@ -20,7 +20,7 @@ function AddLink ({linkNum,onDelete,linkId}){
   const [selected,setSelected]=useState({})
   const dispatch=useDispatch()
   const reduxValue = useSelector((state) => state.LinkDetailsSlice.LinkDetails);
-
+ 
     const [{isDragging},drag] = useDrag(()=>({
        type:"template",
        collect:(monitor)=>({
@@ -107,7 +107,7 @@ useEffect(() => {
       </ul>}
     </div>
 
-   <SignInput label="Link" disabled={!selected.details} errMessage={selected.details?.error} onChange={handleLinkInput} value={linkInput}   icon="icon-link.svg" placeholder="e.g.https://www.github.com/Dotjos"/>
+   <SignInput label="Link" error={selected.details?.error} disabled={!selected.details} errMessage={selected.details?.error} onChange={handleLinkInput} value={linkInput}   icon="icon-link.svg" placeholder="e.g.https://www.github.com/Dotjos"/>
     </div>
   );
 }
