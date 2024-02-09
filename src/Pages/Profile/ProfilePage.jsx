@@ -6,10 +6,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { UpdateProfileDetails } from "../../Store/ProfileDetailsSlice";
 
 function ProfilePage() {
+  const image=useSelector(state=>state.ProfileDetailsSlice.imgURL)
+  console.log(image);
   const profileDetails= useSelector(state=>state.ProfileDetailsSlice)
  const [firstName,setFirstName] = useState(profileDetails.firstName)
  const [lastName,setLastName] = useState(profileDetails.lastName)
  const [email,setEmail] = useState(profileDetails.email)
+ const [imgSrc,setImgSrc]=useState(image)
  const dispatch=useDispatch()
 console.log(profileDetails);
 
@@ -25,22 +28,22 @@ console.log(profileDetails);
 
   function handleSave(){
     console.log("saved");
-    dispatch(UpdateProfileDetails({firstName,lastName,email}))
+    dispatch(UpdateProfileDetails({firstName,lastName,email,imgURL:imgSrc}))
     console.log(profileDetails);
-    
   }
   
   return  (
     <div className="rounded-lg bg-white lg:w-7/12">
 
     <div className="w-full text-Nickel text-sm p-4  border-b">
-   
     <h1 className="text-xl font-bold text-DarkCharcoal">Profile Details</h1>
     <p className="my-4">Add your details to create a personal touch to your profile.</p>
-    <div className="bg-whiteFA p-4 mb-2 grid md:flex justify-between rounded-lg">
-      <h1>Profile picture</h1>
-      <ImageInput/>
-      <p className="text-xs w-full">Image must be below 1024x1024px. Use PNG or JPG format.</p>
+    <div className="bg-whiteFA p-4 mb-2 grid md:flex justify-between items-center rounded-lg">
+      <h1 className="md:w-2/5 ">Profile picture</h1>
+      <div className="w-3/4 md:w-1/4 ">
+        <ImageInput imgSrc={imgSrc} setImgSrc={setImgSrc}/>
+      </div>
+      <p className="text-xs w-full md:w-1/5 ">Image must be below 1024x1024px. Use PNG or JPG format.</p>
     </div>
 
     <form className="bg-whiteFA grid p-3 w-full rounded-lg mb-5 ">

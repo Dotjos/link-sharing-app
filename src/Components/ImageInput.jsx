@@ -1,62 +1,32 @@
-import {  IoImageOutline } from "react-icons/io5";
+import { useRef,  } from "react";
+import { PiImage } from "react-icons/pi";
 
-
-import { useEffect, useState } from 'react';
-const imageMimeType = /image\/(png|jpg|jpeg)/i;
-function ImageInput (){
-  const [file, setFile] = useState(null);
-  const [fileDataURL, setFileDataURL] = useState(null);
-
-  const changeHandler = (e) => {
-    const file = e.target.files[0];
-    if (!file.type.match(imageMimeType)) {
-      alert("Image mime type is not valid");
-      return;
+function ImageInput ({imgSrc,setImgSrc}){
+  const fileInputRef=useRef(null)
+  function handleImageChange(event){
+    const file = event.target.files[0];
+    if (file){
+   const imageUrl = URL.createObjectURL(file); // Create a URL for the selected file
+   setImgSrc(imageUrl)
     }
-    setFile(file);
   }
-  useEffect(() => {
-    let fileReader, isCancel = false;
-    if (file) {
-      fileReader = new FileReader();
-      fileReader.onload = (e) => {
-        const { result } = e.target;
-        if (result && !isCancel) {
-          setFileDataURL(result)
-        }
-      }
-      fileReader.readAsDataURL(file);
-    }
-    return () => {
-      isCancel = true;
-      if (fileReader && fileReader.readyState === 1) {
-        fileReader.abort();
-      }
-    }
 
-  }, [file]);
+  function handleClick(){
+    fileInputRef.current.click()
+    console.log(imgSrc);
+    
+  }
 
-  return <div>
-    <form>
-        <p>
-          <input
-            type="file"
-            id='image'
-            accept='.png, .jpg, .jpeg'
-            onChange={changeHandler}
-            className='cursor-pointer  border'
-          />
-        </p>
-        
-      </form>
-      {fileDataURL ?
-        <p className="img-preview-wrapper border w-full">
-          {
-            <img src={fileDataURL} alt="preview" className='' width="100" height="100" />
-          }
-        </p> : null}
-  </div>
+  return (
+    <div className={`bg-LavenderMist ${imgSrc?"text-white":"text-NeonBlue"}  md:my-0 my-4 py-10 px-5 lg:py-14 rounded-lg flex flex-col justify-center items-center`}
+    style={{ backgroundImage: imgSrc ? `url(${imgSrc})` : "none", backgroundSize: "cover"}}>
+    {/* <div className="absolute inset-0 bg-black opacity-0 transition-opacity duration-300 hover:opacity-50 rounded-lg"></div> */}
+      <PiImage className="w-7 h-7" />
+      <input type="file" ref={fileInputRef} onChange={handleImageChange} className="hidden"  accept="image/*" src="" alt="ProfileImage" />
+      <button className="text-xs" onClick={handleClick}>{imgSrc? "Change image":"+Upload image"}</button>
+    </div>
+  );
 }
 
+export default ImageInput;
 
-  export default ImageInput;

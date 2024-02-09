@@ -4,7 +4,7 @@ function PrevRoute({ to, children, share }) {
   return (
     <NavLink
       to={to}
-      className={`border border-NeonBlue  rounded-lg px-4 py-2 text-center ${
+      className={`border border-NeonBlue  rounded-lg px-2 py-1.5 text-center ${
         share ? "bg-NeonBlue text-whiteFA" : ""
       }`}
     >

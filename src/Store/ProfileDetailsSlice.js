@@ -1,13 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export const ProfileDetailsSlice = createSlice({name:"ProfileDetailsSlice",
-    initialState:{firstName:"",lastName:"",email:"",errFirstName:"",errLastName:"",confirmFirstName:"",confirmLastName:""},
+    initialState:{firstName:"",lastName:"",email:"",errFirstName:"",errLastName:"",confirmFirstName:"",confirmLastName:"",imgURL:""},
     reducers:{
         UpdateProfileDetails:(state,action)=>{
-            const {firstName,lastName,email}=action.payload
+            const {firstName,lastName,email,imgURL}=action.payload
             state.firstName=firstName
             state.lastName=lastName
             state.email=email
+            state.imgURL=imgURL
 
             if(!firstName) {
                 state.errFirstName="Can't be blank"
