@@ -2,8 +2,10 @@ import { NavLink } from "react-router-dom";
 import NavRoutes from "./NavRoutes";
 import { LuLink } from "react-icons/lu";
 import { MdOutlineAccountCircle } from "react-icons/md";
+import getCurrentAccountAuth from "../Async/getCurrentAccountAuth";
 
 function Navbar() {
+  const {user}= getCurrentAccountAuth()
   return (
     <nav className="flex justify-between p-4 border rounded-b-xl lg:rounded-xl items-center bg-white ">
       <div>
@@ -22,7 +24,7 @@ function Navbar() {
       </div>
 
       <NavLink
-        to="/previewPage"
+      to={`/previewPage/${user.id}`}
         className="rounded-lg  border-NeonBlue border py-2 px-3 hover:text-NeonBlue "
       >
         <img src="icon-preview-header.svg" className="md:hidden hover:bg-MaximumBluePurple" />

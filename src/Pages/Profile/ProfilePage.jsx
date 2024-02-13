@@ -6,15 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { UpdateProfileDetails } from "../../Store/ProfileDetailsSlice";
 
 function ProfilePage() {
-  const image=useSelector(state=>state.ProfileDetailsSlice.imgURL)
-  console.log(image);
   const profileDetails= useSelector(state=>state.ProfileDetailsSlice)
  const [firstName,setFirstName] = useState(profileDetails.firstName)
  const [lastName,setLastName] = useState(profileDetails.lastName)
  const [email,setEmail] = useState(profileDetails.email)
- const [imgSrc,setImgSrc]=useState(image)
+ const [imgSrc,setImgSrc]=useState(null)
  const dispatch=useDispatch()
-console.log(profileDetails);
 
   function handleFirstNameChange(e){
     setFirstName(e.target.value)
@@ -27,14 +24,11 @@ console.log(profileDetails);
   }
 
   function handleSave(){
-    console.log("saved");
     dispatch(UpdateProfileDetails({firstName,lastName,email,imgURL:imgSrc}))
-    console.log(profileDetails);
   }
   
   return  (
     <div className="rounded-lg bg-white lg:w-7/12">
-
     <div className="w-full text-Nickel text-sm p-4  border-b">
     <h1 className="text-xl font-bold text-DarkCharcoal">Profile Details</h1>
     <p className="my-4">Add your details to create a personal touch to your profile.</p>
@@ -51,7 +45,6 @@ console.log(profileDetails);
       <Input required={true} errText={profileDetails.errLastName}  type="text" label="Lastname" value={lastName} onChange={handleLastNameChange} asteriks={true} id="Lastname" placeholder="e.g.Appleseed"/>
       <Input required={false}  type="email" label="Email" value={email} onChange={handleEmailChange} asteriks={false} id="Email" placeholder="e.g.email@example.com"/>
     </form>
-    
       </div>
 
       <div className="px-4 py-2.5" >

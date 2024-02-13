@@ -3,7 +3,7 @@ import PrevRoute from "../ui/PrevRoute";
 
 function ProfileNav() {
   const fullURL = window.location.href;
-  const {copied,status}= copyToClipBoard(fullURL)
+  const {copied}= copyToClipBoard(fullURL)
 
   function handleCopyLink(){
     copied(fullURL)
