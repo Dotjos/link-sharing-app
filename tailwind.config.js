@@ -26,6 +26,13 @@ export default {
         Hashnode:"#0000FF",
         stackOverflow:"#FFA500",
       },
+      fontFamily:{
+        instrumentSansBold: ['Instrument Sans Bold',"Arial", "sans-serif"],
+        instrumentSansRegular:['Instrument Sans Regular',"Arial", "sans-serif"],
+        instrumentSansSemiBold:['Instrument Sans SemiBold',"Arial", "sans-serif"],
+        instrumentSansItalicVariable:['Instrument Sans Italic Variable',"Arial", "sans-serif"],         
+        instrumentSansVariable:['Instrument Sans Variable',"Arial", "sans-serif"]
+      }
     },
     
   },

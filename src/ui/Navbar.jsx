@@ -7,7 +7,7 @@ import getCurrentAccountAuth from "../Async/getCurrentAccountAuth";
 function Navbar() {
   const {user}= getCurrentAccountAuth()
   return (
-    <nav className="flex justify-between p-4 border rounded-b-xl lg:rounded-xl items-center bg-white ">
+    <nav className="flex justify-between p-4 rounded-b-xl lg:rounded-xl items-center bg-white ">
       <div>
         <img src="logo-devlinks-small.svg" className="md:hidden" />
         <img src="logo-devlinks-large.svg" className="hidden md:inline-block" />

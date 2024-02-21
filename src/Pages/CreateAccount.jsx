@@ -13,7 +13,6 @@ function CreateAccount (){
   const [passwordMatchError, setPasswordMatchError] = useState(false);
   const {SignNew,status} =  getCreateAccount()
 
-  
   const arePasswordsMatching = password1===password2
   
   const handleEmail = (e) => {

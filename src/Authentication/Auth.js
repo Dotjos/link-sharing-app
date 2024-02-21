@@ -1,4 +1,4 @@
-import { supabase } from "../Supabase";
+import supabase from "../Supabase"
 
 export async function signInWithEmail({email,password}) {
     try{
@@ -15,7 +15,6 @@ export async function signInWithEmail({email,password}) {
         throw error
     }
 }
-
 
 export async function SignNewUser( email, password ) {
     try {

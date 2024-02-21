@@ -12,7 +12,7 @@ export const LinkDetailsSlice=createSlice({
             const { linkId, details } = action.payload
             const containsIdIndex=state.LinkDetails.findIndex(item=>item.linkId===linkId)
             state.LinkDetails[containsIdIndex].details = details
-   },
+        },
         removeLink:(state,action)=>{
             state.LinkDetails = state.LinkDetails.filter(item=>item.linkId!==action.payload)
         },
@@ -60,13 +60,14 @@ export const LinkDetailsSlice=createSlice({
             const [movedLink] = updatedLinkDetails.splice(sourceIndex, 1);
             updatedLinkDetails.splice(targetIndex, 0, movedLink);
           }
-        
           return { ...state, LinkDetails: updatedLinkDetails };
-
+        },
+        setUserData:(state,action)=>{
+          state.LinkDetails=action.payload
         }
 }
 })
 
 
-export const {AddLinkDetails,removeLink,addPersonaLink,saveLink,createLinkObject,reOrganizeState}=LinkDetailsSlice.actions
+export const {AddLinkDetails,removeLink,addPersonaLink,saveLink,createLinkObject,reOrganizeState,setUserData}=LinkDetailsSlice.actions
 export default LinkDetailsSlice.reducer

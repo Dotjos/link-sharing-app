@@ -5,10 +5,22 @@ export const ProfileDetailsSlice = createSlice({name:"ProfileDetailsSlice",
     reducers:{
         UpdateProfileDetails:(state,action)=>{
             const {firstName,lastName,email,imgURL}=action.payload
-            state.firstName=firstName
-            state.lastName=lastName
-            state.email=email
-            state.imgURL=imgURL
+            
+            if(firstName){
+                state.firstName=firstName
+            }
+             
+            if(lastName){
+                state.firstName=firstName
+            }
+
+            if(email){
+                state.firstName=firstName
+            }
+
+            if(imgURL){
+                state.imgURL=imgURL
+            }
 
             if(!firstName) {
                 state.errFirstName="Can't be blank"
@@ -24,9 +36,15 @@ export const ProfileDetailsSlice = createSlice({name:"ProfileDetailsSlice",
                 state.errLastName=""
                 state.confirmLastName=state.lastName
             }
+        },
+        setProfileData:(state,action)=>{
+           const {first_name,last_name,email}=action.payload
+           state.firstName=first_name
+           state.lastName=last_name
+           state.email=email
         }
     }})
 
 
-    export const {UpdateProfileDetails}=ProfileDetailsSlice.actions
+    export const {UpdateProfileDetails,setProfileData}=ProfileDetailsSlice.actions
     export default ProfileDetailsSlice.reducer

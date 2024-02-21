@@ -1,10 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
-import { replaceExistingFile } from "./asyncDatabase";
 import toast from "react-hot-toast";
+import { updateFile } from "./asyncDatabase";
 
 export function useUpdateFile (){
 const {mutate:updateImage,status}=useMutation({mutationFn:(avatarFile)=>
-    replaceExistingFile(avatarFile),
+    {   
+        return updateFile(avatarFile)},
 onSuccess:()=>{
     toast.success("Your changes have been successfully saved!")
 },

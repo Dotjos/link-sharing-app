@@ -3,28 +3,44 @@ import ImageInput from "../../Components/ImageInput";
 import Input from "../../Components/Input";
 import SaveButton from "../../Components/SaveButton";
 import { useDispatch, useSelector } from "react-redux";
-import { UpdateProfileDetails } from "../../Store/ProfileDetailsSlice";
+import useSaveData from "../../Database/useSaveData";
+import getCurrentAccountAuth from "../../Async/getCurrentAccountAuth";
+import useFetchUserData from "../../Database/useFetchUserData";
+import { useEffect } from "react";
 
 function ProfilePage() {
   const profileDetails= useSelector(state=>state.ProfileDetailsSlice)
- const [firstName,setFirstName] = useState(profileDetails.firstName)
- const [lastName,setLastName] = useState(profileDetails.lastName)
- const [email,setEmail] = useState(profileDetails.email)
- const [imgSrc,setImgSrc]=useState(null)
- const dispatch=useDispatch()
+  const {user}=   getCurrentAccountAuth()
+  const dispatch=useDispatch()
+  const id= user.id
+  const {userData}=useFetchUserData(id,dispatch)
+  const [firstName,setFirstName]= useState("")
+  const [lastName,setLastName]= useState("")
+  const [email,setEmail]= useState("")
+  const {saveDB}= useSaveData()
+
+useEffect(function(){
+  if(userData){
+    setFirstName(userData.first_name),
+    setLastName(userData.last_name),
+    setEmail(userData.email)
+  }
+},[userData])
 
   function handleFirstNameChange(e){
     setFirstName(e.target.value)
   }
+
   function handleLastNameChange(e){
     setLastName(e.target.value)
   }
+
   function handleEmailChange(e){
     setEmail(e.target.value)
   }
 
   function handleSave(){
-    dispatch(UpdateProfileDetails({firstName,lastName,email,imgURL:imgSrc}))
+    saveDB({id,first_name:firstName,last_name:lastName,email})
   }
   
   return  (
@@ -35,7 +51,7 @@ function ProfilePage() {
     <div className="bg-whiteFA p-4 mb-2 grid md:flex justify-between items-center rounded-lg">
       <h1 className="md:w-2/5 ">Profile picture</h1>
       <div className="w-3/4 md:w-1/4 ">
-        <ImageInput imgSrc={imgSrc} setImgSrc={setImgSrc}/>
+        <ImageInput />
       </div>
       <p className="text-xs w-full md:w-1/5 ">Image must be below 1024x1024px. Use PNG or JPG format.</p>
     </div>
