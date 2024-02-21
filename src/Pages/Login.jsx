@@ -13,10 +13,12 @@ function Login (){
 
   function handleEmailInput(e){
     setEmail(e.target.value)  
+    setError((prev)=>({...prev,emailError:""}))
    }
 
   function handlePasswordInput(e){
-    setPassword(e.target.value)    
+    setPassword(e.target.value) 
+    setError((prev)=>({...prev,passwordError:""}))   
   }
 
 function onSubmit(event){
