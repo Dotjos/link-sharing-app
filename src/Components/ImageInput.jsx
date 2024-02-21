@@ -30,9 +30,7 @@ function ImageInput (){
     setImgSrc(`${imageURL}?v=${timestamp}`);
     }
 
-    console.log(imgSrc);
 
-  
   function handleClick(){
     fileInputRef.current.click()
   }

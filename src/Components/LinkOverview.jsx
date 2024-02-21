@@ -14,7 +14,7 @@ function LinkOverview (){
   
   
 return(
-  <div className="w-full md:absolute pt-7 px-6 md:px-10 text-center md:top-24 lg:top-32">
+  <div className="w-full md:absolute pt-7 px-6 md:px-10 text-center md:top-24 lg:top-32 ">
   {status==="pending"&&<Spinner/>}
   {status==="success"&& <div className="">
   <div className="bg-white h-full w-full ml-auto mr-auto md:w-1/3 p-7 rounded-lg">
@@ -28,7 +28,13 @@ return(
    <div>{userLinkDetails?.map((link,index)=><PhoneLink key={index} platform={link.details.platform} link={link.details.link} background={link.details.color} icon={link.details.img}/>)}</div>
 </div>
 </div>}
-  {status==="error"&&<h1>Kindly check your or connection link again </h1>}
+  {status==="error"&&
+    <div className="h-96 rounded-lg bg-white flex items-center justify-center">
+       <h1 className="text-red-400 md:text-4xl font-bold font-instrumentSansBold mt-auto mb-auto">
+        Kindly check your network or devlink link and try again
+        </h1>
+    </div>
+    }
   </div>
 )
 }

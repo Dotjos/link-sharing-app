@@ -10,7 +10,7 @@ function Applayout() {
         <Outlet />
       </main>
     </div>
-  );
+  )
 }
 
 export default Applayout;
