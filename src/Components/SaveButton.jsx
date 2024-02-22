@@ -1,6 +1,6 @@
-function SaveButton ({active,text,small,onClick}){
+function SaveButton ({active,text,small,disabled,onClick}){
   return (
-      <button onClick={onClick} disabled={!active} className={`w-full ${small?"md:w-1/12":""}  ${active?"bg-NeonBlue":"bg-MaximumBluePurple"}  rounded-md py-1.5 text-whiteFA`}>{text}</button> 
+      <button onClick={onClick} disabled={disabled} className={`w-full ${small?"md:w-1/12":""} ${disabled?"bg-MaximumBluePurple":"bg-NeonBlue"}  rounded-md py-1.5 text-whiteFA`}>{text}</button> 
   );
 }
 

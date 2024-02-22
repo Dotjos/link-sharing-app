@@ -1,9 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchUserData } from "./asyncDatabase";
-import { setUserData } from "../Store/LinkDetailsSlice";
-import { useEffect } from "react";
 
-function useFetchUserData (userId, dispatch){
+function useFetchUserData (userId){
   const {data:userData, status}= useQuery({
     queryKey:["userData"],
     queryFn:()=>{        
@@ -12,15 +10,6 @@ function useFetchUserData (userId, dispatch){
         console.log(error)
        }
   })
-
-  useEffect(() => {
-    if(dispatch){
-  if (userData) {
-    dispatch(setUserData(userData.linkdetails));
-  }}
-}, [userData, dispatch]);
-  
-
   return { userData, status };
 }
 

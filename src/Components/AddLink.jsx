@@ -89,9 +89,9 @@ useEffect(() => {
 
     <div>
       <div onClick={clickArrow} className="border p-2 gap-x-3 flex mb-3 bg-white rounded-lg">
-        <img src={selected.details?selected.details.img:""}/>
+        <img src={selected?.details?selected.details.img:""}/>
         <div className="flex justify-between items-center w-full">
-          <span className="">{selected.details?selected.details.platform:"Select platform here"}</span>
+          <span className="">{selected?.details?selected?.details.platform:"Select platform here"}</span>
           <button>
           {click===true? <MdOutlineKeyboardArrowDown className="w-6 h-6"/>:<MdOutlineKeyboardArrowUp className="w-6 h-6"/> }
           </button>
@@ -107,7 +107,7 @@ useEffect(() => {
       </ul>}
     </div>
 
-   <SignInput label="Link" error={selected.details?.error} disabled={!selected.details} errMessage={selected.details?.error} onChange={handleLinkInput} value={linkInput}   icon="icon-link.svg" placeholder="e.g.https://www.github.com/Dotjos"/>
+   <SignInput label="Link" error={selected?.details?.error} disabled={!selected?.details} errMessage={selected?.details?.error} onChange={handleLinkInput} value={linkInput}   icon="icon-link.svg" placeholder="e.g.https://www.github.com/Dotjos"/>
     </div>
   );
 }

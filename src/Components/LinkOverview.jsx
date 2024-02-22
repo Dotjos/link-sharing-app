@@ -10,7 +10,14 @@ function LinkOverview (){
   const firstName=userData?.first_name
   const lastName=userData?.last_name
   const email=userData?.email
-  console.log(userData,status);
+  console.log(userData);
+  console.log(userLinkDetails);
+
+  const refinedUserLinkDetails = userLinkDetails?.filter((item) => {
+    return item.details && typeof item.details === 'object' && Object.keys(item.details).length && !item.details.error
+  });
+  
+console.log(refinedUserLinkDetails);
   
   
 return(
@@ -25,7 +32,7 @@ return(
      </div>
     <h1 className="text-DarkCharcoal text-3xl">{firstName} {lastName}</h1>
    <span className="t text-Nickel">{email}</span>
-   <div>{userLinkDetails?.map((link,index)=><PhoneLink key={index} platform={link.details.platform} link={link.details.link} background={link.details.color} icon={link.details.img}/>)}</div>
+   <div>{refinedUserLinkDetails?.map((link,index)=><PhoneLink key={index} platform={link.details.platform} link={link.details.link} background={link.details.color} icon={link.details.img}/>)}</div>
 </div>
 </div>}
   {status==="error"&&

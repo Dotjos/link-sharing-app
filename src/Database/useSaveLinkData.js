@@ -3,7 +3,7 @@ import { saveUserLinkData } from "./asyncDatabase";
 import toast from "react-hot-toast";
 
 function useSaveLinkData (){
-const {mutate:saveLinkDB,status}=  useMutation(
+const {mutate:saveLinkDB,status:saveLinkStatus}=  useMutation(
     {mutationFn:(LinkData)=>{
         console.log(LinkData);
         return saveUserLinkData(LinkData)},
@@ -15,7 +15,7 @@ const {mutate:saveLinkDB,status}=  useMutation(
         }
     }
 )
-    return {saveLinkDB,status}
+    return {saveLinkDB,saveLinkStatus}
 }
 
 export default useSaveLinkData;

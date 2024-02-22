@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {  createSlice } from "@reduxjs/toolkit";
 
 export const LinkDetailsSlice=createSlice({
     name:"Added Link",initialState:{
@@ -28,11 +28,12 @@ export const LinkDetailsSlice=createSlice({
             ...state,
             LinkDetails: state.LinkDetails.map(linkDetail => {
               if (!linkDetail.details || !linkDetail.details.linkInput) {
+                const isStringEmpty=  !linkDetail.details?.linkInput
                 return {
                   ...linkDetail,
                   details: {
                     ...linkDetail.details,
-                    error: "Can't be empty",
+                    error: isStringEmpty?"Can't be empty":""
                   },
                 };
               } else {
@@ -65,7 +66,7 @@ export const LinkDetailsSlice=createSlice({
         setUserData:(state,action)=>{
           state.LinkDetails=action.payload
         }
-}
+},
 })
 
 

@@ -12,7 +12,7 @@ function ImageInput (){
   const [timestamp, setTimestamp] = useState(Date.now());
   const {user} = getCurrentAccountAuth()
   const userId= user.id  
-  const {imageURL}= useFetchUrl(userId)
+  const {imageURL,invalidateUrlPathQuery}= useFetchUrl(userId)
   const {updateImage}= useUpdateFile()
   const [imgSrc,setImgSrc]=useState(null)
 //   
@@ -25,6 +25,7 @@ function ImageInput (){
       uploadImage({ avatarFile: file, id: userId });      
     } else{
       updateImage({ avatarFile: file, id: userId})
+      invalidateUrlPathQuery()
     }
 
     setImgSrc(`${imageURL}?v=${timestamp}`);
