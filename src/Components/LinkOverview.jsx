@@ -2,23 +2,19 @@ import PhoneLink from "../ui/PhoneLink";
 import {useParams} from "react-router-dom";
 import useFetchUserData from "../Database/useFetchUserData";
 import Spinner from "./Spinner";
+import { useFetchUrl } from "../Database/useFetchUrl";
 
 function LinkOverview (){
   const {userId}=useParams()
   const {userData,status}= useFetchUserData(userId)
+  const {imageURL}= useFetchUrl(userId)
   const userLinkDetails=userData?.linkdetails
   const firstName=userData?.first_name
   const lastName=userData?.last_name
   const email=userData?.email
-  console.log(userData);
-  console.log(userLinkDetails);
-
   const refinedUserLinkDetails = userLinkDetails?.filter((item) => {
     return item.details && typeof item.details === 'object' && Object.keys(item.details).length && !item.details.error
   });
-  
-console.log(refinedUserLinkDetails);
-  
   
 return(
   <div className="w-full md:absolute pt-7 px-6 md:px-10 text-center md:top-24 lg:top-32 ">
@@ -26,7 +22,7 @@ return(
   {status==="success"&& <div className="">
   <div className="bg-white h-full w-full ml-auto mr-auto md:w-1/3 p-7 rounded-lg">
     <div className="border-2 border-NeonBlue rounded-full p-16 w-2/4 md:w-2/5 lg:w-1/3 ml-auto mr-auto"
-   //  style={{ backgroundImage: image ? `url(${image})` : "none", backgroundSize: "cover"}}
+    style={{ backgroundImage: imageURL ? `url(${imageURL})` : "none", backgroundSize: "cover"}}
     >
      {/* <span>{!image&&firstInitial+lastNameInitial}</span> */}
      </div>

@@ -9,7 +9,6 @@ function PreviewPage() {
   const {user,isAuthenticated} =  getCurrentAccountAuth()
   const [idCheck, setIdCheck] = useState(false);
 
-
   useEffect(() => {
     if (userId && user?.id) {
       setIdCheck(userId === user.id);

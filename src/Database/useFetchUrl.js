@@ -6,12 +6,10 @@ export function useFetchUrl (pathName){
   const{data:imageURL,status} =useQuery({
     queryKey:["urlPath"],
     queryFn:()=>fetchImageUrl(pathName),
-    
   })
 
-
   const invalidateUrlPathQuery = () => {
-    queryClient.invalidateQueries("urlPath");
+    queryClient.invalidateQueries({queryKey:["urlPath"]});
   };
 
   return {imageURL,status,invalidateUrlPathQuery}

@@ -10,6 +10,7 @@ import { useEffect } from "react";
 
 function ProfilePage() {
   const profileDetails= useSelector(state=>state.ProfileDetailsSlice)
+  const [dimensionError,setDimensionError]= useState(false)
   const {user}=   getCurrentAccountAuth()
   const dispatch=useDispatch()
   const id= user.id
@@ -51,9 +52,9 @@ useEffect(function(){
     <div className="bg-whiteFA p-4 mb-2 grid md:flex justify-between items-center rounded-lg">
       <h1 className="md:w-2/5 ">Profile picture</h1>
       <div className="w-3/4 md:w-1/4 ">
-        <ImageInput />
+        <ImageInput dimensionError={dimensionError} setDimensionError={setDimensionError}/>
       </div>
-      <p className="text-xs w-full md:w-1/5 ">Image must be below 1024x1024px. Use PNG or JPG format.</p>
+      <p className= {`text-xs w-full md:w-1/5 ${dimensionError?"text-red-600":""}`} >Image must be below 1024x1024px. Use PNG or JPG format.</p>
     </div>
 
     <form className="bg-whiteFA grid p-3 w-full rounded-lg mb-5 ">

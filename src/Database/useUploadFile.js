@@ -1,12 +1,14 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {  uploadFile } from "./asyncDatabase";
 import toast from "react-hot-toast";
 
 export function useUploadFile (){
-const{mutate:uploadImage,status} = useMutation({
+    const queryClient=useQueryClient()
+const{mutate:uploadImage,status:uploadStatus} = useMutation({
     mutationFn:(fileDetails)=>{
         return uploadFile(fileDetails)},
     onSuccess:()=>{
+        queryClient.invalidateQueries({queryKey:["urlPath"]})
         toast.success("Image successfully saved")
     },
     onError:(error)=>{
@@ -14,6 +16,6 @@ const{mutate:uploadImage,status} = useMutation({
         toast.error("Failed to save Image")
     }
 })
-   return{uploadImage,status}
+   return{uploadImage,uploadStatus}
 }
 
