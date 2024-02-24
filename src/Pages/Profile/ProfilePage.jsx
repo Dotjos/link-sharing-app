@@ -7,6 +7,7 @@ import useSaveData from "../../Database/useSaveData";
 import getCurrentAccountAuth from "../../Async/getCurrentAccountAuth";
 import useFetchUserData from "../../Database/useFetchUserData";
 import { useEffect } from "react";
+import useSignOut from "../../Async/useSignOut";
 
 function ProfilePage() {
   const profileDetails= useSelector(state=>state.ProfileDetailsSlice)
@@ -14,11 +15,14 @@ function ProfilePage() {
   const {user}=   getCurrentAccountAuth()
   const dispatch=useDispatch()
   const id= user.id
+  const {logOut,logOutStatus}= useSignOut()
   const {userData}=useFetchUserData(id,dispatch)
   const [firstName,setFirstName]= useState("")
   const [lastName,setLastName]= useState("")
   const [email,setEmail]= useState("")
   const {saveDB}= useSaveData()
+  console.log(logOutStatus);
+  
 
 useEffect(function(){
   if(userData){
@@ -66,6 +70,10 @@ useEffect(function(){
 
       <div className="px-4 py-2.5" >
          <SaveButton text="Save" onClick={handleSave} small={true} active={true}/>
+      </div>
+
+      <div className="px-4 py-2.5 flex  justify-end">
+        <SaveButton text="Sign out" notTooSmall={true} onClick={logOut} disabled={logOutStatus==="pending"}/>
       </div>
 
       </div>
