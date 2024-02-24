@@ -21,8 +21,6 @@ function ProfilePage() {
   const [lastName,setLastName]= useState("")
   const [email,setEmail]= useState("")
   const {saveDB}= useSaveData()
-  console.log(logOutStatus);
-  
 
 useEffect(function(){
   if(userData){
