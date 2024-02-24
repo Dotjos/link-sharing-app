@@ -8,7 +8,6 @@ function Login (){
   const [email,setEmail]=useState("")
   const [password,setPassword]=useState("")
   const [error,setError]=useState( {emailError:"",passwordError:""})
-  
   const {signIn,status}=getSignedIn()
 
   function handleEmailInput(e){
@@ -51,7 +50,7 @@ if(formValid){
       <p className="">Add your deatils below to get back into the app.</p>
       <form>
           <SignInput label="Email address" error={error.emailError} errMessage={error.emailError} name="email" type="email" onChange={handleEmailInput} value={email} icon="icon-email.svg" placeholder="e.g.oladotjos@gmail.com"/>
-          <SignInput label="Password" error={error.passwordError} errMessage={error.passwordError} name="password" type="password" onChange={handlePasswordInput} value={password} icon="icon-password.svg" placeholder="Enter your password"/>
+          <SignInput label="Password" eyeAble={true} error={error.passwordError} errMessage={error.passwordError} name="password" type="password" onChange={handlePasswordInput} value={password} icon="icon-password.svg" placeholder="Enter your password"/>
           <SaveButton onClick={onSubmit} text="Login"  active={status!=="pending"} small={false}/>
       </form>
       
