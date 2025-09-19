@@ -1,0 +1,46 @@
+questions
+explain these;
+
+// Why: parameterized query ($1, $2, $3) prevents SQL injection.
+const result = await pool.query(
+`INSERT INTO users (name, email, password)
+       VALUES ($1, $2, $3)
+       RETURNING id, name, email, created_at`,
+[name, email, hashedPassword]
+);
+
+    // Look for token in Authorization header: "Bearer <token>"
+
+const authHeader = req.headers['authorization'];
+const token = authHeader && authHeader.split(' ')[1];
+
+// Auth routes mounted at /auth
+app.use('/auth', authRoutes);
+
+//worthy recommendations
+
+Cookie-based auth → more secure than passing JWT in headers.
+
+Frontend integration → e.g. React/Next.js app where users can sign up and log in.
+
+Validation improvements → require strong passwords, validate email format, etc.
+
+Logout & refresh tokens → handle longer sessions and secure logout.
+
+Extend /profile to fetch full user data from Postgres (not just token payload).
+
+Example: return user’s name, email, created_at.
+
+Build the "Link Sharing" feature
+
+Users can save links with a title + URL.
+
+Each link belongs to a user_id.
+
+Table: links (id, user_id, title, url, created_at).
+
+Frontend connection
+
+Hook this backend into your React/Next.js frontend.
+
+Signup/Login forms → store JWT in localStorage → attach to requests.
