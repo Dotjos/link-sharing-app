@@ -17,9 +17,7 @@ node_modules
 .DS_Store
 .prettierignore
 
-
 THEDESIGNS
-
 .env
 supabase
 .vscode
