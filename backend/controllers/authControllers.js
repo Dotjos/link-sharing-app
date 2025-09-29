@@ -1,12 +1,14 @@
 import bcrypt from "bcrypt";
 import db from "../database.js"
 import crypto from "crypto";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 // import sendVerificationEmail from "../config/mailer.js";
 // import sendEmail from "./sendEmail.js"; // you’d create a helper for sending emails
 
 export async function signUp(req, res) {
   const {  email, password } = req.body;
-
   try {
     const existingUser = await db.query(
       "SELECT * FROM users WHERE email=$1",
@@ -27,7 +29,7 @@ export async function signUp(req, res) {
           [verificationToken, email]
         );
 
-        const verificationLink = `http://localhost:5000/auth/verify?email=${email}&token=${verificationToken}`;
+        const verificationLink = `http://localhost:5173/auth/verify?email=${email}&token=${verificationToken}`;
         await resend.emails.send({
           from: "Your App <onboarding@resend.dev>",
           to: email,
@@ -48,7 +50,8 @@ export async function signUp(req, res) {
       [ email, passwordHash, verificationToken, false]
     );
 
-    const verificationLink = `http://localhost:5000/auth/verify?email=${email}&token=${verificationToken}`;
+    // const verificationLink = `http://localhost:5000/auth/verify?email=${email}&token=${verificationToken}`;
+    const verificationLink = `http://localhost:5173/auth/verify?email=${email}&token=${verificationToken}`;
     await resend.emails.send({
       from: "Your App <onboarding@resend.dev>",
       to: email,
@@ -62,37 +65,75 @@ export async function signUp(req, res) {
   }
 }
 
+// export async function verifyAccount(req, res) {
+//   const { token } = req.query;
 
+//   try {
+//     if (!token) {
+//       return res.status(400).json({ error: "Verification token is required." });
+//     }
+
+//     // Check if token exists
+//     const result = await db.query(
+//       "SELECT * FROM users WHERE verification_token=$1",
+//       [token]
+//     );
+
+//     if (result.rows.length === 0) {
+//       return res.status(400).json({ error: "Invalid or expired token." });
+//     }
+
+//     // Mark as verified
+//     await db.query(
+//       "UPDATE users SET is_verified=true, verification_token=null WHERE id=$1",
+//       [result.rows[0].id]
+//     );
+
+//     res.json({ message: "✅ Email verified successfully. You can now log in." });
+//   } catch (err) {
+//     console.error("Error verifying account:", err.message);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// }
 export async function verifyAccount(req, res) {
-  const { token } = req.query;
+  const { email, token } = req.query;
 
   try {
-    if (!token) {
-      return res.status(400).json({ error: "Verification token is required." });
-    }
-
-    // Check if token exists
     const result = await db.query(
-      "SELECT * FROM users WHERE verification_token=$1",
-      [token]
+      "SELECT * FROM users WHERE email=$1",
+      [email]
     );
 
     if (result.rows.length === 0) {
+      return res.status(400).json({ error: "User not found." });
+    }
+
+    const user = result.rows[0];
+
+    // ✅ Already verified
+    if (user.is_verified) {
+      return res.json({ message: "Email is already verified." });
+    }
+
+    // ❌ Token mismatch or missing
+    if (!user.verification_token || user.verification_token !== token) {
       return res.status(400).json({ error: "Invalid or expired token." });
     }
 
-    // Mark as verified
+    // ✅ Token valid → Verify user
     await db.query(
-      "UPDATE users SET is_verified=true, verification_token=null WHERE id=$1",
-      [result.rows[0].id]
+      "UPDATE users SET is_verified=true, verification_token=null WHERE email=$1",
+      [email]
     );
 
-    res.json({ message: "✅ Email verified successfully. You can now log in." });
+    return res.json({ message: "Email verified successfully." });
+
   } catch (err) {
-    console.error("Error verifying account:", err.message);
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Verification error:", err);
+    return res.status(500).json({ error: "Server error. Please try again later." });
   }
 }
+
 
 
 export async function login(req, res) {
