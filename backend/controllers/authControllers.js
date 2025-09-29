@@ -2,10 +2,8 @@ import bcrypt from "bcrypt";
 import db from "../database.js"
 import crypto from "crypto";
 import { Resend } from "resend";
-
 const resend = new Resend(process.env.RESEND_API_KEY);
-// import sendVerificationEmail from "../config/mailer.js";
-// import sendEmail from "./sendEmail.js"; // you’d create a helper for sending emails
+
 
 export async function signUp(req, res) {
   const {  email, password } = req.body;
@@ -19,7 +17,9 @@ export async function signUp(req, res) {
       const user = existingUser.rows[0];
 
       if (user.is_verified) {
-        return res.status(400).json({ error: "This email is already registered" });
+        return res.status(409).json(
+          { error: "This email is already registered." }
+        );
       } else {
         // User exists but not verified → resend verification email
         const verificationToken = crypto.randomUUID();
@@ -37,7 +37,10 @@ export async function signUp(req, res) {
           html: `<p>Click <a href="${verificationLink}">here</a> to verify your email.</p>`,
         });
 
-        return res.json({ message: "Verification email resent" });
+        return res.status(200).json({
+          success: true,
+          message: "Account already exists but is not verified. A new verification email has been sent.",
+        });
       }
     }
 
@@ -50,7 +53,6 @@ export async function signUp(req, res) {
       [ email, passwordHash, verificationToken, false]
     );
 
-    // const verificationLink = `http://localhost:5000/auth/verify?email=${email}&token=${verificationToken}`;
     const verificationLink = `http://localhost:5173/auth/verify?email=${email}&token=${verificationToken}`;
     await resend.emails.send({
       from: "Your App <onboarding@resend.dev>",
@@ -59,9 +61,16 @@ export async function signUp(req, res) {
       html: `<p>Click <a href="${verificationLink}">here</a> to verify your email.</p>`,
     });
 
-    res.json({ message: "Account created, please verify your email" });
+    return res.status(201).json({
+      success: true,
+      message: "Account created successfully. Please check your email to verify your account.",
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Signup error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later.",
+    });
   }
 }
 
