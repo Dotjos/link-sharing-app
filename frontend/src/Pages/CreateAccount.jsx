@@ -3,6 +3,7 @@ import SaveButton from "../Components/SaveButton";
 import SignInput from "../ui/SignInput";
 import { useState } from "react";
 import { getCreateAccount } from "../Async/getCreateAccount";
+import RealSpinner from "../Components/RealSpinner";
 
 function CreateAccount (){
   const [email,setEmail]=useState("")
@@ -27,7 +28,6 @@ function CreateAccount (){
   }
 
   const handlePassword2 = (e) => setPassword2(e.target.value);
-
 
 const onSubmit = (e) => {
   e.preventDefault();
@@ -57,12 +57,14 @@ const onSubmit = (e) => {
       <h1 className="font-bold text-xl text-DarkCharcoal my-3">Create Account</h1>
       <p>Let&apos;s get you started sharing your links</p>
       <form>
-      <SignInput label="Email address" error={emailError}  errMessage={emailErrorMessage} onChange={handleEmail} value={email} name="email" type="email" icon="icon-email.svg" placeholder="e.g.oladotjos@gmail.com"/>
-      <SignInput label="Create password" eyeAble={true} error={passwordLengthError||passwordMatchError} name="password1" errMessage="Please check again" onChange={handlePassword1} value={password1} type="password" icon="icon-password.svg" placeholder="At least 8 characters"/>
-      <SignInput label="Confirm password" eyeAble={true} name="password2" type="password" onChange={handlePassword2} value={password2} icon="icon-password.svg" placeholder="At least 8 characters"/>
-      <span>Password must contain at least 8 characters</span>
+      <SignInput label="Email address" error={emailError} errMessage={emailErrorMessage} onChange={handleEmail} value={email} name="email" type="email" icon="icon-email.svg" placeholder="e.g.oladotjos@gmail.com"/>
+      <SignInput label="Create password" eyeAble={true} autoComplete="new-password" error={passwordLengthError||passwordMatchError} name="password1" errMessage="Please check again" onChange={handlePassword1} value={password1} type="password" icon="icon-password.svg" placeholder="At least 8 characters"/>
+      <SignInput label="Confirm password" eyeAble={true} autoComplete="new-password"  name="password2" type="password" onChange={handlePassword2} value={password2} icon="icon-password.svg" placeholder="At least 8 characters"/>
+      <p className="pt-1 pb-4">Password must contain at least 8 characters</p>
       <SaveButton active={status!=="pending"} text="Create new Account"  small={false} onClick={onSubmit}/>
       </form>
+
+      {/* <RealSpinner/> */}
       
       <div className="grid md:flex text-center my-6 items-center justify-center"> 
         <span className="text">Already have an account?</span>
