@@ -1,18 +1,11 @@
 import apiClient from "../lib/apiClient"
 
-export async function signInWithEmail({email,password}) {
-    try{
-        const data = await apiClient("/auth/login",{
-            method:"POST",
-            body:{email,password},
-        })
-        localStorage.setItem("token", data.token);
-        return data.user;
-    }catch(error){
-        console.error("Login failed:", error);
-        throw error
-    }
-}
+export async function signInWithEmail({ email, password }) {
+    return apiClient("/auth/login", {
+      method: "POST",
+      body: { email, password },
+    });
+  }
 
 export async function SignNewUser(email, password) {
   return apiClient("/auth/signup", {

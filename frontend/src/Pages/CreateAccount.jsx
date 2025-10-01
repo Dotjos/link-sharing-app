@@ -3,7 +3,6 @@ import SaveButton from "../Components/SaveButton";
 import SignInput from "../ui/SignInput";
 import { useState } from "react";
 import { getCreateAccount } from "../Async/getCreateAccount";
-import RealSpinner from "../Components/RealSpinner";
 
 function CreateAccount (){
   const [email,setEmail]=useState("")
@@ -13,7 +12,8 @@ function CreateAccount (){
   const [emailError, setEmailError] = useState(false);
   const [passwordLengthError, setPasswordLengthError] = useState(false)
   const [passwordMatchError, setPasswordMatchError] = useState(false);
-  const {SignNew,status} =  getCreateAccount()
+  const { mutate: SignNew, status } = getCreateAccount();
+
   const emailPattern= /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   
   const handleEmail = (e) => {
@@ -29,26 +29,31 @@ function CreateAccount (){
 
   const handlePassword2 = (e) => setPassword2(e.target.value);
 
+
 const onSubmit = (e) => {
   e.preventDefault();
+  let valid = true;
 
-  // Check if the email is valid
   if (email.trim() === "") {
     setEmailError(true);
-    setEmailErrorMessage("Can't be empty")
+    setEmailErrorMessage("Can't be empty");
+    valid = false;
   } else if (!emailPattern.test(email)) {
-    console.log(emailPattern.test(email));
-    setEmailError(true)
+    setEmailError(true);
     setEmailErrorMessage("Check your email format");
+    valid = false;
   }
 
   if (password1.length < 8) {
     setPasswordLengthError(true);
+    valid = false;
   } else if (password1 !== password2) {
     setPasswordMatchError(true);
+    valid = false;
   }
 
-  // If the form is valid, perform the account creation logic
+  if (!valid) return; // stop here if form is invalid
+
   SignNew({ email, password: password1 });
 };
 
@@ -61,8 +66,14 @@ const onSubmit = (e) => {
       <SignInput label="Create password" eyeAble={true} autoComplete="new-password" error={passwordLengthError||passwordMatchError} name="password1" errMessage="Please check again" onChange={handlePassword1} value={password1} type="password" icon="icon-password.svg" placeholder="At least 8 characters"/>
       <SignInput label="Confirm password" eyeAble={true} autoComplete="new-password"  name="password2" type="password" onChange={handlePassword2} value={password2} icon="icon-password.svg" placeholder="At least 8 characters"/>
       <p className="pt-1 pb-4">Password must contain at least 8 characters</p>
-      <SaveButton active={status!=="pending"} text="Create new Account"  small={false} onClick={onSubmit}/>
-      </form>
+      <SaveButton
+  disabled={status === "pending"}
+  loading={status === "pending"}
+  text="Create new Account"
+  small={false}
+  onClick={onSubmit}
+/>
+       </form>
 
       {/* <RealSpinner/> */}
       

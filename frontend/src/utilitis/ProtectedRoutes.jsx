@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import getCurrentAccountAuth from "../Async/getCurrentAccountAuth";
+import getCurrentAccountAuth from "../Async/getCurrentAccountAuth.js";
 
 function ProtectedRoutes ({children}){
  const {status,isAuthenticated} = getCurrentAccountAuth()
@@ -11,9 +11,7 @@ function ProtectedRoutes ({children}){
  },[isAuthenticated,navigate,status])
  
  if(isAuthenticated)return children
+return children
 }
 
 export default ProtectedRoutes;
-
-
-

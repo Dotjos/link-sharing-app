@@ -1,80 +1,47 @@
-import supabase from "../Supabase"
-
 export async function saveUserLinkData({ id, linkdetails }) {
-    try {
-      const { data, error } = await supabase
-        .from('userdata')
-        .upsert([{ id, linkdetails }])
-        .select();
-  
-      if (error) throw new Error(error.message);
-      console.log(data);
-      return data;
-    } catch (error) {
-      console.error;
-      throw error;
-    }
-  }
-  
-export async function saveUserData({ id, first_name, last_name,email }) {
-    try {
-        const { data, error } = await supabase
-            .from('userdata')
-            .upsert(
-                [
-                    { id, first_name, last_name,email }
-                ],
-                { onConflict: ['id'], update: ['first_name', 'last_name'] }
-            )
-            .select();
-        if (error) {
-            throw new Error(`Unable to update row: ${error.message}`);
-        }
-        
-        console.log(data);
-    } catch (error) {
-        console.log(error);
-        throw error;
-    }
+  return apiClient("/userdata/links", {
+    method: "POST",
+    body: { id, linkdetails },
+  });
+}
+
+export async function saveUserData({ id, first_name, last_name, email }) {
+  return apiClient("/userdata", {
+    method: "POST",
+    body: { id, first_name, last_name, email },
+  });
 }
   
+
 export async function fetchUserData(userId) {
-  // Implementation to fetch user data from Supabase based on userId
-  // Example:
-  try {
-    const { data, error } = await supabase.from('userdata').select('*').eq('id', userId).single();
-  if (error) {
-    throw new Error(`Failed to fetch user data ${error.message}`);
-  }
-  return data;
-  } catch (error) {
-    console.error(error)
-    throw error
-  } 
+  return apiClient(`/userdata/${userId}`, { method: "GET" });
 }
 
-export async function uploadFile({id,avatarFile}){
-  const storage = supabase.storage.from('profileImages');
-    await storage.upload(`${id}/profileImages.png`, avatarFile);
+export async function uploadFile({ id, avatarFile }) {
+  const formData = new FormData();
+  formData.append("file", avatarFile);
+  formData.append("userId", id);
+
+  return apiClient("/storage/upload", {
+    method: "POST",
+    body: formData,
+    headers: {}, // no JSON header, FormData handles it
+  });
 }
 
-export async function updateFile({id,avatarFile}){
-  const storage = supabase.storage.from('profileImages');
-  await storage.update(`${id}/profileImages.png`, avatarFile);
+export async function updateFile({ id, avatarFile }) {
+  const formData = new FormData();
+  formData.append("file", avatarFile);
+  formData.append("userId", id);
+
+  return apiClient("/storage/update", {
+    method: "PUT",
+    body: formData,
+    headers: {},
+  });
 }
 
-export const fetchImageUrl = async (pathName) => {
-    try {
-      const { data, error } =  supabase.storage
-        .from('profileImages')
-        .getPublicUrl(`${pathName}/profileImages.png`);
+export async function fetchImageUrl(pathName) {
+  return apiClient(`/storage/public-url/${pathName}`, { method: "GET" });
+}
 
-      if (error) {
-        throw error;
-      }    
-      const publicUrl=data.publicUrl  
-     return publicUrl
-    } catch (error) {
-      console.error("Error fetching image URL:", error);
-    }
-  };

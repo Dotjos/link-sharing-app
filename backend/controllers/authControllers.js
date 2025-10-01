@@ -74,36 +74,6 @@ export async function signUp(req, res) {
   }
 }
 
-// export async function verifyAccount(req, res) {
-//   const { token } = req.query;
-
-//   try {
-//     if (!token) {
-//       return res.status(400).json({ error: "Verification token is required." });
-//     }
-
-//     // Check if token exists
-//     const result = await db.query(
-//       "SELECT * FROM users WHERE verification_token=$1",
-//       [token]
-//     );
-
-//     if (result.rows.length === 0) {
-//       return res.status(400).json({ error: "Invalid or expired token." });
-//     }
-
-//     // Mark as verified
-//     await db.query(
-//       "UPDATE users SET is_verified=true, verification_token=null WHERE id=$1",
-//       [result.rows[0].id]
-//     );
-
-//     res.json({ message: "✅ Email verified successfully. You can now log in." });
-//   } catch (err) {
-//     console.error("Error verifying account:", err.message);
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// }
 export async function verifyAccount(req, res) {
   const { email, token } = req.query;
 
@@ -142,8 +112,6 @@ export async function verifyAccount(req, res) {
     return res.status(500).json({ error: "Server error. Please try again later." });
   }
 }
-
-
 
 export async function login(req, res) {
   // (your login logic, but add a check for is_verified)
