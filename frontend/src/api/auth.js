@@ -28,20 +28,16 @@ export  async function signOut() {
 }
 
 export async function getCurrentUser() {
-   try{
-    const token = localStorage.getItem("token");
-    if (!token) return null;
+  const token = localStorage.getItem("token");
+  if (!token) return null; // no token, no user
 
-    const data = await apiClient("/auth/me", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
 
-      return data.user;
-   } catch (error){
-    console.error("Error fetching current user:", error);
-    return null; // safer than throwing here
-   }
-}
+  const data = await apiClient("/auth/me", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return data.user;
+ } 

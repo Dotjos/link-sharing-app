@@ -15,7 +15,8 @@ function Page() {
   const dispatch=useDispatch()
   const {saveLinkDB,saveLinkStatus}= useSaveLinkData()
   const {user}=getCurrentAccountAuth()
-  const id=user.id
+  console.log(user);
+  const id=user?.id
   const {userData,status}=useFetchUserData(id)
   const linkdetails = userData?.linkdetails
 

@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import db from "../database.js"
 import crypto from "crypto";
 import { Resend } from "resend";
+import jwt from "jsonwebtoken";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 
@@ -128,8 +129,31 @@ export async function login(req, res) {
     const isMatch = await bcrypt.compare(password, user.password_hash);
     if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
 
-    res.json({ message: "Login successful", user });
+    const token = jwt.sign(
+      { id: user.id, email: user.email }, // payload
+      process.env.JWT_SECRET,             // secret
+      { expiresIn: "1h" }                 // expiry time
+    );
+
+    res.json({
+      message: "Login successful",
+      token, 
+      user: {
+        id: user.id,
+        email: user.email,
+      }
+    });
+
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+}
+
+export async function getCurrentUser(req, res) {
+  try {
+    // req.user was attached by middleware after verifying JWT
+    res.json({ user: req.user });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch user" });
   }
 }
