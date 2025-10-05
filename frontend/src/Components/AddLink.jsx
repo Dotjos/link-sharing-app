@@ -52,7 +52,6 @@ function AddLink ({linkNum,onDelete,linkId}){
  }
 
 
-
 // Use useEffect to update the local state if the Redux value changes
 useEffect(() => {
   setLinkInput(initialLinkInputFromRedux || '');
@@ -93,12 +92,12 @@ useEffect(() => {
         <div className="flex justify-between items-center w-full">
           <span className="">{selected?.details?selected?.details.platform:"Select platform here"}</span>
           <button>
-          {click===true? <MdOutlineKeyboardArrowDown className="w-6 h-6"/>:<MdOutlineKeyboardArrowUp className="w-6 h-6"/> }
+          {click===true? <MdOutlineKeyboardArrowDown className="w-6 text-NeonBlue text-2xl font-bold h-6"/>:<MdOutlineKeyboardArrowUp className="w-6 text-2xl text-NeonBlue h-6"/> }
           </button>
         </div>
       </div>
 
-      {click&&<ul className="bg-white list-image-none p-2  rounded-lg">
+      {click&&<ul className="bg-white list-image-none p-2 rounded-lg">
         {platformDetails.map((platf,index)=>
          <li  key={index} className="py-2 border-b">
         <Platform platform={platf.platform} icon={platf.img} handleSelected={()=>handleSelection(platf)}/>
