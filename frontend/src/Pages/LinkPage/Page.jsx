@@ -20,7 +20,6 @@ function Page() {
   const {userData,status}=useFetchUserData(id)
   const linkdetails = userData?.linkdetails
   console.log(linkdetails);
-  
   console.log(linkTemp);
 
   useEffect(() => {
@@ -73,7 +72,7 @@ function Page() {
           <SaveButton onClick={handleSaveClick} disabled={saveLinkStatus==="pending" || linkTemp.length===0}  small={true} text="Save"/>
         </div>
     </div>
-  );
+  )
 }
 
 export default Page;
