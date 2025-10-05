@@ -151,8 +151,8 @@ export async function login(req, res) {
 
 export async function getCurrentUser(req, res) {
   try {
-    // req.user was attached by middleware after verifying JWT
-    res.json({ user: req.user });
+    const result = await db.query("SELECT id, email FROM users WHERE id = $1", [req.user.id]);
+    res.json({ user: result.rows[0] });
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch user" });
   }

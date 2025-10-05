@@ -9,7 +9,6 @@ function getCurrentAccountAuth (){
         retry:false,
 
       })
-      console.log(user);
       return {
         user,
         status,

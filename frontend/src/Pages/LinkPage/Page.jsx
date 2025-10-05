@@ -19,6 +19,7 @@ function Page() {
   const id=user?.id
   const {userData,status}=useFetchUserData(id)
   const linkdetails = userData?.linkdetails
+  console.log(linkdetails);
 
   useEffect(() => {
     if (status === "success") {
@@ -43,26 +44,26 @@ function Page() {
 
   return (
     <div className="lg:w-7/12 text-sm text-Nickel bg-white rounded-lg">
-      {status==="success"&&<div className="border-b w-full p-6 md:px-6 h-screen overflow-y-auto md:pt-10 md:pb-7">
-          <h1 className="font-bold text-xl text-DarkCharcoal">
+      <div className="border-b w-full p-6 md:px-6 h-screen overflow-y-auto md:pt-10 md:pb-7">
+          <h1 className="font-black text-2xl text-DarkCharcoal">
             Customize your links
           </h1>
-          <p className="text-sm mb-3">
+          <p className="text-base my-3">
             Add/edit/remove links below and then share all your profiles with
             the world!
           </p>
-          <button className="my-3 w-full border-NeonBlue p-2 border rounded-lg text-NeonBlue" onClick={handleClick} >
+          <button className="my-7 w-full font-black text-md border-NeonBlue px-4 py-3 border rounded-lg text-NeonBlue" onClick={handleClick} >
             + Add new link
           </button>
 
-        <div >
+        <div className="">
          {linkTemp?.length === 0&&<StartLnkPage/>}
          {linkTemp?.length > 0 && linkTemp?.map((link, index) => (
             <AddLink key={index}  linkNum={index} linkId={link.linkId}  onDelete={()=>handleDeleteLink(link.linkId)}/> 
          ))}
         </div>
          
-        </div>}
+        </div>
         
       {status==="pending"&&<RealSpinner/>}
 

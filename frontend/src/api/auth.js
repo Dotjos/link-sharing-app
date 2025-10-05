@@ -31,7 +31,6 @@ export async function getCurrentUser() {
   const token = localStorage.getItem("token");
   if (!token) return null; // no token, no user
 
-
   const data = await apiClient("/auth/me", {
       method: "GET",
       headers: {
