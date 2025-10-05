@@ -20,6 +20,8 @@ function Page() {
   const {userData,status}=useFetchUserData(id)
   const linkdetails = userData?.linkdetails
   console.log(linkdetails);
+  
+  console.log(linkTemp);
 
   useEffect(() => {
     if (status === "success") {
@@ -65,10 +67,10 @@ function Page() {
          
         </div>
         
-      {status==="pending"&&<RealSpinner/>}
+      {/* {status==="pending"&&<RealSpinner/>} */}
 
         <div className="p-5">
-          <SaveButton onClick={handleSaveClick} disabled={saveLinkStatus==="pending"}  small={true} text="Save"/>
+          <SaveButton onClick={handleSaveClick} disabled={saveLinkStatus==="pending" || linkTemp.length===0}  small={true} text="Save"/>
         </div>
     </div>
   );
