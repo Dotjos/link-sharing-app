@@ -7,7 +7,6 @@ function SignIn (){
       <main className="mt-14 md:w-2/4 bg-white md:p-7 md:rounded-lg">
         <Outlet/>
       </main>
-      
     </div>
   );
 }

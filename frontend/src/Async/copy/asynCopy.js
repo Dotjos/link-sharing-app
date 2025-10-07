@@ -5,4 +5,3 @@ export async function asynCopy (text){
             return document.execCommand('copy', true, text);
         }
 }
-

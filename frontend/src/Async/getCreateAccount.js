@@ -1,23 +1,16 @@
+// Async/getCreateAccount.js
 import { useMutation } from "@tanstack/react-query";
-import { SignNewUser } from "../Authentication/Auth";
+import { SignNewUser } from "../api/auth";
 import toast from "react-hot-toast";
 
 export function getCreateAccount() {
-  const { mutate: SignNew, status } = useMutation({
-    mutationFn: ({ email, password }) =>{
-      return SignNewUser(email, password)},
-    onSuccess: () => {
-      toast.success("Successful, check your mail");
+  return useMutation({
+    mutationFn: ({ email, password }) => SignNewUser(email, password),
+    onSuccess: (data) => {
+      toast.success(data.message || "Account created! Check your email.");
     },
-    onError: (error) => {
-      toast.error("Kindly check your credentials or network")
-      // console.log(error.Error)
+    onError: (err) => {
+      toast.error(err.error || "Something went wrong");
     },
   });
-
-  return { SignNew, status };
 }
-
-
-
-

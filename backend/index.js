@@ -3,7 +3,6 @@ import dotenv from "dotenv"
 import authRoutes from "./routes/auth.js"
 import cors from "cors"
 import pool from "./database.js";
-import { authenticateToken } from "./middleware/authMiddleware.js";
 
 //load env variables
 dotenv.config()
@@ -26,19 +25,6 @@ app.get("/db-test", async (req,res)=>{
 })
 
 app.use('/auth', authRoutes);
-
-// Example protected route
-app.get('/profile', authenticateToken, async (req, res) => {
-  try {
-    // req.user.id was set by the middleware
-    const { rows } = await pool.query('SELECT id, name, email, created_at FROM users WHERE id = $1', [req.user.id]);
-    if (!rows[0]) return res.status(404).json({ error: 'User not found' });
-    return res.json({ user: rows[0] });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: 'Server error' });
-  }
-});
 
 //start server
 const PORT = process.env.PORT || 500

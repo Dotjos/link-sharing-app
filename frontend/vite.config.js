@@ -9,6 +9,3 @@ export default defineConfig({
     VITE_SUPABASE_KEY : JSON.stringify(process.env.VITE_SUPABASE_KEY)
   }
 })
-
-
-

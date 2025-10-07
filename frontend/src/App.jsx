@@ -3,6 +3,7 @@ import Store from "./Store/Store";
 import { Provider } from "react-redux";
 import  { Toaster } from 'react-hot-toast';
 import PreviewPage from "./Pages/PreviewPage"
+import Verify from "./Pages/Verify/page";
 import {  QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./Async/queryStore";
 import { DndProvider } from 'react-dnd';
@@ -62,6 +63,7 @@ const router = createBrowserRouter([
   },
   { path: "/previewPage/:userId", element: <PreviewPage/>
  },
+ {path:"auth/verify",element:<Verify/>}
 ]);
 
 function App() {
