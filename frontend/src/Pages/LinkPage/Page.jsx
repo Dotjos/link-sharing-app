@@ -113,7 +113,7 @@ function Page() {
         </p>
 
         <button
-          className="my-3 w-full border-NeonBlue p-2 border rounded-lg text-NeonBlue"
+          className="my-3 w-full hover:bg-LavenderMist border-NeonBlue p-2 border rounded-lg text-NeonBlue"
           onClick={handleAddLink}
         >
           + Add new link
