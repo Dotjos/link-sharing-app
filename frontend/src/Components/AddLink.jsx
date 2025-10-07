@@ -1,112 +1,144 @@
 import SignInput from "../ui/SignInput";
 import Platform from "../ui/Platform";
 import { useEffect, useState } from "react";
-import { MdOutlineKeyboardArrowDown } from "react-icons/md";
-import { MdOutlineKeyboardArrowUp } from "react-icons/md";
+import {
+  MdOutlineKeyboardArrowDown,
+  MdOutlineKeyboardArrowUp,
+} from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { AddLinkDetails, addPersonaLink, reOrganizeState } from "../Store/LinkDetailsSlice";
+import { reOrganizeState } from "../Store/LinkDetailsSlice";
 import { platformDetails } from "../utilitis/LinkInfo";
 import { useDrag, useDrop } from "react-dnd";
 
-function AddLink ({linkNum,onDelete,linkId}){
-  const initialLinkInputFromRedux = useSelector((state) => {
-  const linkDetail = state.LinkDetailsSlice.LinkDetails.find(
-      (item) => item.linkId === linkId
-    );
-  return linkDetail?.details?.linkInput || '';
-  });
-  const [click,setClick]=useState(false)
-  const [linkInput,setLinkInput]=useState(initialLinkInputFromRedux)
-  const [selected,setSelected]=useState({})
-  const dispatch=useDispatch()
-  const reduxValue = useSelector((state) => state.LinkDetailsSlice.LinkDetails);
- 
-    const [{isDragging},drag] = useDrag(()=>({
-       type:"template",
-       collect:(monitor)=>({
-          isDragging: !!monitor.isDragging()
-       }),
-       item:{linkId},
-       end:(item,monitor)=>{
-        handleDrop(item,monitor)
-       
-       }
-    }))
+function AddLink({ linkNum, linkId, linkData, onDelete, onUpdate }) {
+  const dispatch = useDispatch();
 
-    const [collectedProps, drop] = useDrop(() => ({
-      accept: "template",
-      drop: (item,monitor) => {
-        return {linkId}
-      },
-    
-    }));
-
-  // function  handleAccessDrop(item,monitor){
-  //   // console.log(item);
-  //   // console.log(monitor);
-  // }
-
- function handleDrop(item,monitor){
-  const dropResult = monitor.getDropResult()
-  dispatch(reOrganizeState({sourceId:item.linkId,targetId:dropResult.linkId}))
- }
-
-
-// Use useEffect to update the local state if the Redux value changes
-useEffect(() => {
-  setLinkInput(initialLinkInputFromRedux || '');
-}, [initialLinkInputFromRedux]);
+  // 🟦 Local state (isolated from Redux)
+  const [linkInput, setLinkInput] = useState("");
+  const [selectedPlatform, setSelectedPlatform] = useState(platformDetails[0]);
+  const [error, setError] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
-    setSelected(reduxValue.find((value) => value.linkId === linkId));
-  }, [reduxValue, linkId]);
+    if (linkData?.details) {
+      // find the full platform object based on the stored platform name
+      const platformObj =
+        platformDetails.find(
+          (p) =>
+            p.platform.toLowerCase() ===
+            linkData.details.platform?.platform.toLowerCase()
+        ) || platformDetails[0];
 
-  function handleLinkInput(e){
+      setSelectedPlatform(platformObj);
+      setLinkInput(linkData.details.linkInput || "");
+      setError(linkData.details.error || "");
+    }
+  }, [linkData]);
+
+  // 🟠 Drag & Drop setup
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: "template",
+    item: { linkId },
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  }));
+
+  const [_, drop] = useDrop(() => ({
+    accept: "template",
+    drop: (item, monitor) => {
+      const dropResult = monitor.getDropResult();
+      if (dropResult) {
+        dispatch(
+          reOrganizeState({
+            sourceId: item.linkId,
+            targetId: dropResult.linkId,
+          })
+        );
+      }
+    },
+  }));
+
+  function handlePlatformSelect(platform) {
+    setSelectedPlatform(platform);
+    setShowDropdown(false);
+    onUpdate(linkId, { platform: platform, linkInput, error: "" });
+  }
+
+  function handleLinkInput(e) {
     const inputValue = e.target.value;
     setLinkInput(inputValue);
-    dispatch(addPersonaLink({linkInput:inputValue,linkId}))
-  }
-
-  function clickArrow(){
-    setClick(prev=>!prev)
-  }
-
-  function handleSelection(platform){
-    setClick(false)
-    dispatch(AddLinkDetails({linkId:linkId,details:{...platform,linkInput}}))
+    onUpdate(linkId, {
+      platform: selectedPlatform,
+      linkInput: inputValue,
+      error: "",
+    });
   }
 
   return (
-    <div ref={drop} className="bg-whiteFA transition-all duration-300 rounded-lg p-3 my-3"> 
-    <div className="flex justify-between mb-3">
-      <div className="flex gap-3 items-center">
-      <img ref={drag} className="w-4 h-4" src="icon-drag-and-drop.svg"/>
-      <span className="font-bold">Link #{linkNum+1}</span>
+    <div
+      ref={drop}
+      className="bg-whiteFA rounded-lg p-3 my-3 transition-all duration-300"
+    >
+      <div className="flex justify-between mb-3">
+        <div className="flex gap-3 items-center">
+          <img
+            ref={drag}
+            className="w-4 h-4 cursor-move"
+            src="icon-drag-and-drop.svg"
+          />
+          <span className="font-bold">Link #{linkNum + 1}</span>
+        </div>
+        <button onClick={() => onDelete(linkId)}>Remove</button>
       </div>
-      <button onClick={()=>onDelete(linkId)}>Remove</button>
-    </div>
 
-    <div>
-      <div onClick={clickArrow} className="border p-2 gap-x-3 flex mb-3 bg-white rounded-lg">
-        <img src={selected?.details?selected.details.img:""}/>
+      {/* Dropdown */}
+      <div
+        onClick={() => setShowDropdown((p) => !p)}
+        className="border p-2 gap-x-3 flex mb-3 bg-white rounded-lg"
+      >
         <div className="flex justify-between items-center w-full">
-          <span className="">{selected?.details?selected?.details.platform:"Select platform here"}</span>
-          <button>
-          {click===true? <MdOutlineKeyboardArrowDown className="w-6 text-NeonBlue text-2xl font-bold h-6"/>:<MdOutlineKeyboardArrowUp className="w-6 text-2xl text-NeonBlue h-6"/> }
-          </button>
+          <div className="flex gap-x-5 cursor-pointer">
+            <img
+              src={selectedPlatform?.img || ""}
+              alt={`${selectedPlatform?.platform}icon`}
+            />
+            <span>{selectedPlatform?.platform}</span>
+          </div>
+          {showDropdown ? (
+            <MdOutlineKeyboardArrowUp className="w-6 text-2xl text-NeonBlue h-6" />
+          ) : (
+            <MdOutlineKeyboardArrowDown className="w-6 text-NeonBlue text-2xl font-bold h-6" />
+          )}
         </div>
       </div>
 
-      {click&&<ul className="bg-white list-image-none p-2 rounded-lg">
-        {platformDetails.map((platf,index)=>
-         <li  key={index} className="py-2 border-b">
-        <Platform platform={platf.platform} icon={platf.img} handleSelected={()=>handleSelection(platf)}/>
-        </li>
-        )}
-      </ul>}
-    </div>
+      {/* Platform list */}
+      {showDropdown && (
+        <ul className="bg-white p-2 rounded-lg shadow">
+          {platformDetails.map((platf, index) => (
+            <li key={index} className="py-2 border-b last:border-none">
+              <Platform
+                platform={platf.platform}
+                icon={platf.img}
+                handleSelected={() => handlePlatformSelect(platf)}
+              />
+            </li>
+          ))}
+        </ul>
+      )}
 
-   <SignInput label="Link" error={selected?.details?.error} disabled={!selected?.details} errMessage={selected?.details?.error} onChange={handleLinkInput} value={linkInput}   icon="icon-link.svg" placeholder="e.g.https://www.github.com/Dotjos"/>
+      {/* Link Input */}
+      <SignInput
+        label="Link"
+        error={error}
+        disabled={!selectedPlatform}
+        errMessage={error}
+        onChange={handleLinkInput}
+        value={linkInput}
+        icon="icon-link.svg"
+        placeholder={selectedPlatform?.placeholder}
+      />
     </div>
   );
 }

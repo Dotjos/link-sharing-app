@@ -1,74 +1,65 @@
-import {  createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
-export const LinkDetailsSlice=createSlice({
-    name:"Added Link",initialState:{
-        LinkDetails:[]},
-        reducers:{
-        createLinkObject:(state,action)=>{
-          if(!state.LinkDetails.some(item=>item.linkId===action.payload))
-          state.LinkDetails=[...state.LinkDetails,{linkId:action.payload}]
-        },
-        AddLinkDetails: (state, action) => {
-            const { linkId, details } = action.payload
-            const containsIdIndex=state.LinkDetails.findIndex(item=>item.linkId===linkId)
-            state.LinkDetails[containsIdIndex].details = details
-        },
-        removeLink:(state,action)=>{
-            state.LinkDetails = state.LinkDetails.filter(item=>item.linkId!==action.payload)
-        },
-        addPersonaLink:(state,action)=>{
-          const linkToBeUPdated=state.LinkDetails.find(item=>item.linkId===action.payload.linkId)
-          if (linkToBeUPdated) {
-            // If the item with the matching linkId is found
-            linkToBeUPdated.details.linkInput = action.payload.linkInput;
-          }
-        },
-        saveLink: (state) => {
-          return {
-            ...state,
-            LinkDetails: state.LinkDetails.map(linkDetail => {
-              if (!linkDetail.details || !linkDetail.details.linkInput) {
-                const isStringEmpty=  !linkDetail.details?.linkInput
-                return {
-                  ...linkDetail,
-                  details: {
-                    ...linkDetail.details,
-                    error: isStringEmpty?"Can't be empty":""
-                  },
-                };
-              } else {
-                const checkFormat = new RegExp(linkDetail.details.platFormat).test(linkDetail.details.linkInput);
-                return {
-                  ...linkDetail,
-                  details: {
-                    ...linkDetail.details,
-                    error: checkFormat ? "" : "Please check URL",
-                    link: checkFormat? linkDetail.details.linkInput : ""
-                  },
-                };
-              }
-            }),
-          };
-        },
-        reOrganizeState:(state,action)=>{
-          const { sourceId, targetId } = action.payload;
-          const updatedLinkDetails = [...state.LinkDetails];
-          const sourceIndex = updatedLinkDetails.findIndex(link => link.linkId === sourceId);
-          const targetIndex = updatedLinkDetails.findIndex(link => link.linkId === targetId);
+export const LinkDetailsSlice = createSlice({
+  name: "LinkDetails",
+  initialState: {
+    LinkDetails: [],
+  },
+  reducers: {
+    // ✅ Create a new empty link object (used only on initial render or prefetch)
+    createLinkObject: (state, action) => {
+      const exists = state.LinkDetails.some(
+        (item) => item.linkId === action.payload
+      );
+      if (!exists) {
+        state.LinkDetails.push({ linkId: action.payload, details: {} });
+      }
+    },
 
+    // ✅ Remove a link
+    removeLink: (state, action) => {
+      state.LinkDetails = state.LinkDetails.filter(
+        (item) => item.linkId !== action.payload
+      );
+    },
 
-          if (sourceIndex !== -1 && targetIndex !== -1) {
-            const [movedLink] = updatedLinkDetails.splice(sourceIndex, 1);
-            updatedLinkDetails.splice(targetIndex, 0, movedLink);
-          }
-          return { ...state, LinkDetails: updatedLinkDetails };
-        },
-        setUserData:(state,action)=>{
-          state.LinkDetails=action.payload
-        }
-},
-})
+    // ✅ Set user data from DB
+    setUserData: (state, action) => {
+      state.LinkDetails = action.payload || [];
+    },
 
+    // ✅ Batch save after local edits
+    saveLinkBatch: (state, action) => {
+      // action.payload should be the full array of validated links from local state
+      const validLinks = action.payload.filter((link) => {
+        const input = link?.details?.linkInput?.trim();
+        const hasError = link?.details?.error;
+        return input && !hasError;
+      });
+      state.LinkDetails = validLinks;
+    },
 
-export const {AddLinkDetails,removeLink,addPersonaLink,saveLink,createLinkObject,reOrganizeState,setUserData}=LinkDetailsSlice.actions
-export default LinkDetailsSlice.reducer
+    // ✅ Reorganize order after drag-drop (optional)
+    reOrganizeState: (state, action) => {
+      const { sourceId, targetId } = action.payload;
+      const updated = [...state.LinkDetails];
+      const srcIndex = updated.findIndex((l) => l.linkId === sourceId);
+      const tgtIndex = updated.findIndex((l) => l.linkId === targetId);
+      if (srcIndex !== -1 && tgtIndex !== -1) {
+        const [moved] = updated.splice(srcIndex, 1);
+        updated.splice(tgtIndex, 0, moved);
+      }
+      state.LinkDetails = updated;
+    },
+  },
+});
+
+export const {
+  createLinkObject,
+  removeLink,
+  setUserData,
+  saveLinkBatch,
+  reOrganizeState,
+} = LinkDetailsSlice.actions;
+
+export default LinkDetailsSlice.reducer;
