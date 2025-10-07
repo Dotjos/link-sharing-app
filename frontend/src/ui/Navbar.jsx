@@ -24,7 +24,7 @@ function Navbar() {
       </div>
 
       <NavLink
-      to={`/previewPage/${user.id}`}
+      to={`/previewPage/${user?.id}`}
         className="rounded-lg  border-NeonBlue border py-2 px-3 hover:text-NeonBlue "
       >
         <img src="icon-preview-header.svg" className="md:hidden hover:bg-MaximumBluePurple" />

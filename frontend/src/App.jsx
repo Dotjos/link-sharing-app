@@ -46,7 +46,7 @@ const router = createBrowserRouter([
     <Suspense fallback={<RealSpinner/>}>
      <ProtectedRoutes>
       <Applayout />
-    </ProtectedRoutes>, 
+    </ProtectedRoutes>  
     </Suspense>,
     children: [
       { path: "/linkPage", element: 

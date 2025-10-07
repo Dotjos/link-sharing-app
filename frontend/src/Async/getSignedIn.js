@@ -12,9 +12,10 @@ function getSignedIn (){
           return signInWithEmail({email,password})
         },
         
-    onSuccess:(user)=>{
+    onSuccess:(data)=>{
         toast.success("Login successful")
-        queryClient.setQueriesData(["user"], user);
+        localStorage.setItem("token", data.token); // ✅ save JWT
+        queryClient.setQueriesData(["user"], data.user) // ✅ update user data in cache;
         navigate("/linkPage")
         },
     onError:(error)=>{

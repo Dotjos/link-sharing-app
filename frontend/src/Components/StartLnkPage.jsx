@@ -6,10 +6,10 @@ function StartLnkPage (){
               src="illustration-empty.svg"
             />
             <div className="md:p-7 lg:p-10"> 
-            <h1 className="font-bold text-xl mb-3 text-DarkCharcoal">
+            <h1 className="font-black text-2xl mb-5 text-DarkCharcoal">
               Let&apos;s get you started
             </h1>
-            <p className="">
+            <p className="text-justify text-base">
               Use the “Add new link” button to get started. Once you have more
               than one link, you can reorder and edit them. We&apos;re here to help
               you share your profiles with everyone!

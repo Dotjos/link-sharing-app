@@ -30,7 +30,7 @@ function SignInput({ icon, placeholder, type, label, name, error, onChange, valu
             disabled={disabled}
             type={inputType} // Update type based on isPasswordVisible
             value={value}
-            className="w-full outline-none bg-inherit"
+            className="w-full outline-none text-base bg-inherit"
             placeholder={placeholder}
           />
           {eyeAble && (
