@@ -1,15 +1,23 @@
-
-function SaveButton({ loading = false, text, small, disabled, onClick, notTooSmall }) {
+function SaveButton({
+  loading = false,
+  text,
+  small,
+  disabled,
+  onClick,
+  notTooSmall,
+}) {
   const isDisabled = disabled || loading;
 
   return (
     <button
       onClick={onClick}
       disabled={isDisabled}
-      className={`flex items-center text-base font-bold justify-center py-3 gap-2 w-full 
+      className={`flex items-center hover:bg-MaximumBluePurple  text-base font-bold justify-center py-3 gap-2 w-full 
         ${small ? "md:w-1/12" : ""}
         ${notTooSmall ? "md:w-2/12" : ""}
-        ${isDisabled ? "bg-MaximumBluePurple cursor-not-allowed" : "bg-NeonBlue"}
+        ${
+          isDisabled ? "bg-MaximumBluePurple cursor-not-allowed" : "bg-NeonBlue"
+        }
         rounded-md py-1.5 px-1.5 text-whiteFA`}
     >
       {/* Spinner shows only when loading */}
@@ -41,4 +49,3 @@ function SaveButton({ loading = false, text, small, disabled, onClick, notTooSma
 }
 
 export default SaveButton;
-

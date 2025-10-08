@@ -39,18 +39,6 @@ export const LinkDetailsSlice = createSlice({
       state.LinkDetails = validLinks;
     },
 
-    // ✅ Reorganize order after drag-drop (optional)
-    reOrganizeState: (state, action) => {
-      const { sourceId, targetId } = action.payload;
-      const updated = [...state.LinkDetails];
-      const srcIndex = updated.findIndex((l) => l.linkId === sourceId);
-      const tgtIndex = updated.findIndex((l) => l.linkId === targetId);
-      if (srcIndex !== -1 && tgtIndex !== -1) {
-        const [moved] = updated.splice(srcIndex, 1);
-        updated.splice(tgtIndex, 0, moved);
-      }
-      state.LinkDetails = updated;
-    },
   },
 });
 
@@ -59,7 +47,6 @@ export const {
   removeLink,
   setUserData,
   saveLinkBatch,
-  reOrganizeState,
 } = LinkDetailsSlice.actions;
 
 export default LinkDetailsSlice.reducer;

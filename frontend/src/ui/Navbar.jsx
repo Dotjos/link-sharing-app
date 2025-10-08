@@ -5,7 +5,7 @@ import { MdOutlineAccountCircle } from "react-icons/md";
 import getCurrentAccountAuth from "../Async/getCurrentAccountAuth";
 
 function Navbar() {
-  const {user}= getCurrentAccountAuth()
+  const { user } = getCurrentAccountAuth();
   return (
     <nav className="flex justify-between p-4 rounded-b-xl lg:rounded-xl items-center bg-white ">
       <div>
@@ -24,10 +24,13 @@ function Navbar() {
       </div>
 
       <NavLink
-      to={`/previewPage/${user?.id}`}
-        className="rounded-lg  border-NeonBlue border py-2 px-3 hover:text-NeonBlue "
+        to={`/previewPage/${user?.id}`}
+        className="rounded-lg  border-NeonBlue hover:bg-LavenderMist border py-2 px-3 hover:text-NeonBlue "
       >
-        <img src="icon-preview-header.svg" className="md:hidden hover:bg-MaximumBluePurple" />
+        <img
+          src="icon-preview-header.svg"
+          className="md:hidden hover:bg-MaximumBluePurple"
+        />
         <span className="hidden md:inline-block">Preview</span>
       </NavLink>
     </nav>

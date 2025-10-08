@@ -12,10 +12,12 @@ function Phoneview() {
           {addedLinks?.map((addeDetails) => (
             <PhoneLink
               key={addeDetails.linkId}
-              link={addeDetails.details?.link}
+              link={addeDetails.details?.linkInput}
               platform={addeDetails.details?.platform?.platform}
-              icon={addeDetails.details?.img}
-              background={addeDetails.details?.color || "bg-LavenderMist"}
+              icon={addeDetails.details?.platform?.img}
+              background={
+                addeDetails.details?.platform?.color || "bg-LavenderMist"
+              }
             />
           ))}
         </div>
