@@ -25,18 +25,26 @@ function Page() {
   const { saveLinkDB, saveLinkStatus } = useSaveLinkData();
 
   // 🧭 Load user data into local state
+  // useEffect(() => {
+  //   if (status === "success" && userData?.linkdetails) {
+  //     setLocalLinks(userData.linkdetails);
+  //     dispatch(setUserData(userData.linkdetails));
+  //   }
+  // }, [status, userData, dispatch]);
+
   useEffect(() => {
-    if (status === "success" && userData?.linkdetails) {
-      setLocalLinks(userData.linkdetails);
-      dispatch(setUserData(userData.linkdetails));
-    }
-  }, [status, userData, dispatch]);
+    console.log("Updated localLinks:", localLinks);
+  }, [localLinks]);
 
   // 🧱 Handlers
   const handleAddLink = () => {
     const newLink = {
       linkId: generateRandomId(),
-      details: {},
+      details: {
+        platform: null,
+        linkInput: "",
+        error: "",
+      },
     };
     setLocalLinks((prev) => [...prev, newLink]);
     setIsDirty(true);
@@ -59,7 +67,6 @@ function Page() {
   };
 
   const validateLink = (selectedPlatform, link) => {
-    console.log(selectedPlatform);
     // Handle empty input
     if (!link || link.trim() === "") {
       // setError("Link cannot be empty.");
@@ -79,6 +86,51 @@ function Page() {
     }
 
     return ""; // ✅ No error — valid link
+  };
+
+  // const moveLink = (sourceId, targetId) => {
+  //   const sourceIndex = localLinks.findIndex((l) => l.linkId === sourceId);
+  //   const targetIndex = localLinks.findIndex((l) => l.linkId === targetId);
+  //   if (sourceIndex === -1 || targetIndex === -1) return;
+
+  //   const updated = [...localLinks];
+  //   const [moved] = updated.splice(sourceIndex, 1);
+  //   updated.splice(targetIndex, 0, moved);
+  //   setIsDirty(true);
+  //   console.log(localLinks);
+  //   setLocalLinks(updated);
+  // };
+
+  // const moveLink = (sourceId, targetId) => {
+  //   setLocalLinks((prev) => {
+  //     const updated = [...prev];
+  //     const sourceIndex = updated.findIndex((l) => l.linkId === sourceId);
+  //     const targetIndex = updated.findIndex((l) => l.linkId === targetId);
+  //     if (sourceIndex === -1 || targetIndex === -1) return prev;
+
+  //     const [moved] = updated.splice(sourceIndex, 1);
+  //     updated.splice(targetIndex, 0, moved);
+
+  //     console.log("Updated after move:", updated);
+  //     return updated;
+  //   });
+  //   setIsDirty(true);
+  // };
+
+  const moveLink = (sourceId, targetId) => {
+    setLocalLinks((prev) => {
+      const updated = [...prev];
+      const sourceIndex = updated.findIndex((l) => l.linkId === sourceId);
+      const targetIndex = updated.findIndex((l) => l.linkId === targetId);
+      if (sourceIndex === -1 || targetIndex === -1) return prev;
+
+      const [moved] = updated.splice(sourceIndex, 1);
+      updated.splice(targetIndex, 0, JSON.parse(JSON.stringify(moved)));
+
+      console.log("Updated after move:", updated);
+      return updated;
+    });
+    setIsDirty(true);
   };
 
   const handleSave = () => {
@@ -126,8 +178,9 @@ function Page() {
               <AddLink
                 key={link.linkId}
                 linkNum={index}
-                linkData={link}
+                linkData={link.details}
                 linkId={link.linkId}
+                onMove={moveLink}
                 onDelete={() => handleDeleteLink(link.linkId)}
                 onUpdate={handleUpdateLink}
               />
