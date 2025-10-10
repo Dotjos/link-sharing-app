@@ -1,3 +1,5 @@
+import apiClient from "../lib/apiClient";
+
 export async function saveUserLinkData({ id, linkdetails }) {
   return apiClient("/userdata/links", {
     method: "POST",
@@ -12,9 +14,8 @@ export async function saveUserData({ id, first_name, last_name, email }) {
   });
 }
   
-
 export async function fetchUserData(userId) {
-  return apiClient(`/userdata/${userId}`, { method: "GET" });
+  return apiClient(`/userdata/links/${userId}`, { method: "GET" });
 }
 
 export async function uploadFile({ id, avatarFile }) {

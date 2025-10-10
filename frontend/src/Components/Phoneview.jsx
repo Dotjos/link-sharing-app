@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import PhoneLink from "../ui/PhoneLink";
+import { platformDetails } from "../utilitis/LinkInfo";
 
 function Phoneview() {
   const addedLinks = useSelector((state) => state.LinkDetailsSlice.LinkDetails);
@@ -9,17 +10,21 @@ function Phoneview() {
       <div className="w-full items-center flex justify-center relative">
         <img src="illustration-phone-mockup.svg" className="w-1/2" />
         <div className="bg-white rounded-lg  bottom-4 w-5/12 h-2/3 overflow-y-auto absolute">
-          {addedLinks?.map((addeDetails) => (
-            <PhoneLink
-              key={addeDetails.linkId}
-              link={addeDetails.details?.linkInput}
-              platform={addeDetails.details?.platform?.platform}
-              icon={addeDetails.details?.platform?.img}
-              background={
-                addeDetails.details?.platform?.color || "bg-LavenderMist"
-              }
-            />
-          ))}
+          {addedLinks?.map(({ linkId, details }) => {
+            const platformName = details?.platform;
+            const platformMeta =
+              platformDetails.find((item) => item.platform === platformName) ||
+              {};
+            return (
+              <PhoneLink
+                key={linkId}
+                link={details?.linkInput}
+                platform={platformName}
+                icon={platformMeta.img}
+                background={platformMeta?.color || "bg-LavenderMist"}
+              />
+            );
+          })}
         </div>
       </div>
     </div>
