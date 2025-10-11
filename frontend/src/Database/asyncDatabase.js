@@ -18,15 +18,13 @@ export async function fetchUserData(userId) {
   return apiClient(`/userdata/links/${userId}`, { method: "GET" });
 }
 
-export async function uploadFile({ id, avatarFile }) {
+export async function uploadFile(imageFile) {
   const formData = new FormData();
-  formData.append("file", avatarFile);
-  formData.append("userId", id);
+  formData.append("image", imageFile);
 
-  return apiClient("/storage/upload", {
+  return apiClient("/userdata/upload-profile", {
     method: "POST",
     body: formData,
-    headers: {}, // no JSON header, FormData handles it
   });
 }
 

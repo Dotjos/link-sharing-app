@@ -4,11 +4,11 @@ import toast from "react-hot-toast";
 
 export function useUploadFile (){
     const queryClient=useQueryClient()
-const{mutate:uploadImage,status:uploadStatus} = useMutation({
-    mutationFn:(fileDetails)=>{
-        return uploadFile(fileDetails)},
+    const{mutateAsync:uploadImage,status:uploadStatus} = useMutation({
+    mutationFn:(imageFile)=>
+         uploadFile(imageFile),
     onSuccess:()=>{
-        queryClient.invalidateQueries({queryKey:["urlPath"]})
+        queryClient.invalidateQueries({queryKey:["userData"]})
         toast.success("Image successfully saved")
     },
     onError:(error)=>{
