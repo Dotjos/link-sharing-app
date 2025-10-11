@@ -46,6 +46,7 @@ for (let i = 0; i < linkdetails.length; i++) {
   }
 }
 
+
   export async function getUserLinks(req, res) {
     const { userId } = req.params;
   
@@ -54,26 +55,75 @@ for (let i = 0; i < linkdetails.length; i++) {
     }
   
     try {
-      const result = await pool.query(
-        `SELECT link_id, platform, url, position 
-         FROM user_links 
-         WHERE user_id = $1 
-         ORDER BY position ASC`,
-        [userId]
-      );
+      // Run both queries in parallel
+      const [linksResult, userResult] = await Promise.all([
+        pool.query(
+          `SELECT link_id, platform, url, position
+           FROM user_links
+           WHERE user_id = $1
+           ORDER BY position ASC`,
+          [userId]
+        ),
+        pool.query(
+          `SELECT first_name, last_name, email, profile_image
+           FROM users
+           WHERE id = $1`,
+          [userId]
+        ),
+      ]);
   
-      const links = result.rows.map((row) => ({
-        linkId: row.link_id, // ✅ use stored linkId instead of new one
+      const links = linksResult.rows.map((row) => ({
+        linkId: row.link_id,
         details: {
           platform: row.platform,
           linkInput: row.url,
         },
       }));
   
-      res.json({ links });
+      const user = userResult.rows[0] || {};
+  
+      res.status(200).json({
+        user: {
+          firstName: user.first_name,
+          lastName: user.last_name,
+          email: user.email,
+          profileImage: user.profile_image,
+        },
+        links,
+      });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Error fetching user links" });
+      console.error("Error fetching user data and links:", error);
+      res.status(500).json({ message: "Error fetching user data" });
     }
   }
   
+  
+export const uploadProfileImage = async (req, res) => {
+  try {
+    const result = req.file;
+    console.log(req);
+    console.log("Upload result:", result);
+    if (!result || !result.path)
+      return res.status(400).json({ error: "Image upload failed" });
+
+    const userId = req.user.id; // from your JWT auth middleware
+    const imageUrl = result.path;
+
+    const updateQuery = `
+      UPDATE users
+      SET profile_image = $1
+      WHERE id = $2
+      RETURNING id, email, profile_image
+    `;
+
+    const { rows } = await pool.query(updateQuery, [imageUrl, userId]);
+
+    res.status(200).json({
+      message: "Profile image updated successfully!",
+      user: rows[0],
+    });
+  } catch (error) {
+    console.error("Upload error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
