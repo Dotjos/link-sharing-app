@@ -4,12 +4,15 @@ import { platformDetails } from "../utilitis/LinkInfo";
 
 function Phoneview() {
   const addedLinks = useSelector((state) => state.LinkDetailsSlice.LinkDetails);
+  const email = useSelector((state) => state.ProfileDetailsSlice.email);
+  console.log(email);
 
   return (
     <div className="hidden w-2/5 lg:flex items-center justify-center bg-white rounded-lg p-4">
       <div className="w-full items-center flex justify-center relative">
         <img src="illustration-phone-mockup.svg" className="w-1/2" />
         <div className="bg-white rounded-lg  bottom-4 w-5/12 h-2/3 overflow-y-auto absolute">
+          <h4 className="text-center text-xs">{email}</h4>
           {addedLinks?.map(({ linkId, details }) => {
             const platformName = details?.platform;
             const platformMeta =

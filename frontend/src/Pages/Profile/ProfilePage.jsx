@@ -7,10 +7,18 @@ import useSaveData from "../../Database/useSaveData";
 import getCurrentAccountAuth from "../../Async/getCurrentAccountAuth";
 import useFetchUserData from "../../Database/useFetchUserData";
 import { useEffect } from "react";
+import { updateProfileDetails } from "../../Store/ProfileDetailsSlice";
 
 function ProfilePage() {
   const profileDetails = useSelector((state) => state.ProfileDetailsSlice);
+  console.log(profileDetails);
+  const {
+    firstName: reduxFirstName,
+    lastName: reduxLastName,
+    email: reduxEmail,
+  } = profileDetails;
   const [dimensionError, setDimensionError] = useState(false);
+  const [imgSrc, setImgSrc] = useState(null);
   const { user } = getCurrentAccountAuth();
   const id = user?.id;
   const dispatch = useDispatch();
@@ -18,15 +26,30 @@ function ProfilePage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [errors, setErrors] = useState({
+    firstName: "",
+    lastName: "",
+  });
   const { saveDB } = useSaveData();
 
   useEffect(
     function () {
       if (userData) {
+        console.log(userData);
+        dispatch(updateProfileDetails({ email: userData.user.email || "" }));
+        setEmail(reduxEmail || "");
       }
     },
     [userData]
   );
+
+  useEffect(() => {
+    if (reduxFirstName || reduxLastName) {
+      setFirstName(reduxFirstName);
+      setLastName(reduxLastName);
+      setImgSrc(profileDetails.imgURL);
+    }
+  }, [reduxFirstName, reduxLastName, profileDetails.imgURL]);
 
   function handleFirstNameChange(e) {
     setFirstName(e.target.value);
@@ -36,12 +59,30 @@ function ProfilePage() {
     setLastName(e.target.value);
   }
 
-  function handleEmailChange(e) {
-    setEmail(e.target.value);
+  function validateProfile({ firstName, lastName, email }) {
+    const errors = {};
+
+    if (!firstName.trim()) errors.firstName = "Can't be blank.";
+    if (!lastName.trim()) errors.lastName = "Can't be blank.";
+
+    return errors;
   }
 
   function handleSave() {
-    saveDB({ id, first_name: firstName, last_name: lastName, email });
+    const validationErrors = validateProfile({ firstName, lastName });
+    console.log(firstName, lastName);
+
+    // ✅ If there are any validation errors, don't proceed
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    dispatch(updateProfileDetails({ firstName, lastName, imgURL: imgSrc }));
+    console.log(profileDetails);
+    setErrors({ firstName: "", lastName: "" });
+    console.log(firstName, lastName);
+    saveDB({ first_name: firstName, last_name: lastName });
   }
 
   return (
@@ -57,6 +98,8 @@ function ProfilePage() {
             <ImageInput
               dimensionError={dimensionError}
               setDimensionError={setDimensionError}
+              imgSrc={imgSrc}
+              setImgSrc={setImgSrc}
             />
           </div>
           <p
@@ -71,7 +114,7 @@ function ProfilePage() {
         <form className="bg-whiteFA grid p-3 w-full rounded-lg mb-5 ">
           <Input
             required={true}
-            errText={profileDetails.errFirstName}
+            errText={errors.firstName}
             type="text"
             label="Firstname"
             value={firstName}
@@ -82,7 +125,7 @@ function ProfilePage() {
           />
           <Input
             required={true}
-            errText={profileDetails.errLastName}
+            errText={errors.lastName}
             type="text"
             label="Lastname"
             value={lastName}
@@ -96,8 +139,9 @@ function ProfilePage() {
             type="email"
             label="Email"
             value={email}
-            onChange={handleEmailChange}
-            asteriks={false}
+            onChange={() => {}}
+            // asteriks={true}
+            // errText={errors.email}
             id="Email"
             placeholder="e.g.email@example.com"
           />

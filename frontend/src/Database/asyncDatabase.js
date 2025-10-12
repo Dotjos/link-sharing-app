@@ -7,10 +7,10 @@ export async function saveUserLinkData({ id, linkdetails }) {
   });
 }
 
-export async function saveUserData({ id, first_name, last_name, email }) {
-  return apiClient("/userdata", {
-    method: "POST",
-    body: { id, first_name, last_name, email },
+export async function saveUserData({ first_name, last_name,  }) {
+  return apiClient("/userdata/update-profile/", {
+    method: "PATCH",
+    body: {  first_name, last_name,  },
   });
 }
   
@@ -28,19 +28,5 @@ export async function uploadFile(imageFile) {
   });
 }
 
-export async function updateFile({ id, avatarFile }) {
-  const formData = new FormData();
-  formData.append("file", avatarFile);
-  formData.append("userId", id);
 
-  return apiClient("/storage/update", {
-    method: "PUT",
-    body: formData,
-    headers: {},
-  });
-}
-
-export async function fetchImageUrl(pathName) {
-  return apiClient(`/storage/public-url/${pathName}`, { method: "GET" });
-}
 
