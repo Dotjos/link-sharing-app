@@ -1,13 +1,18 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 async function apiClient(path, { method = "GET", body, headers = {} } = {}) {
+  const token = localStorage.getItem("token"); 
+
+  const isFormData = body instanceof FormData;
+
   const options = {
     method,
     headers: {
-      "Content-Type": "application/json",
+      ...(isFormData ? {} : { "Content-Type": "application/json" }),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...headers,
     },
-    body: body ? JSON.stringify(body) : undefined,
+    body: isFormData ? body : body ? JSON.stringify(body) : undefined,
   };
 
   try {
@@ -30,7 +35,6 @@ async function apiClient(path, { method = "GET", body, headers = {} } = {}) {
     return data;
   } catch (err) {
     console.error("API call failed:", err);
-    // Ensure errors always have a structured shape
     throw err.status
       ? err
       : { status: 500, error: err.message || "Network or server error" };
@@ -38,3 +42,5 @@ async function apiClient(path, { method = "GET", body, headers = {} } = {}) {
 }
 
 export default apiClient;
+
+

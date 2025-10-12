@@ -25,23 +25,20 @@ function Page() {
   const { saveLinkDB, saveLinkStatus } = useSaveLinkData();
 
   // 🧭 Load user data into local state
-  // useEffect(() => {
-  //   if (status === "success" && userData?.linkdetails) {
-  //     setLocalLinks(userData.linkdetails);
-  //     dispatch(setUserData(userData.linkdetails));
-  //   }
-  // }, [status, userData, dispatch]);
-
   useEffect(() => {
-    console.log("Updated localLinks:", localLinks);
-  }, [localLinks]);
+    console.log(userData);
+    if (status === "success" && userData.links) {
+      setLocalLinks(userData.links);
+      dispatch(setUserData(userData.links));
+    }
+  }, [status, userData, dispatch]);
 
   // 🧱 Handlers
   const handleAddLink = () => {
     const newLink = {
       linkId: generateRandomId(),
       details: {
-        platform: null,
+        platform: "",
         linkInput: "",
         error: "",
       },
@@ -75,8 +72,7 @@ function Page() {
 
     // Find platform in platformDetails
     const platformData = platformDetails.find(
-      (p) =>
-        p.platform.toLowerCase() === selectedPlatform?.platform.toLowerCase()
+      (p) => p.platform.toLowerCase() === selectedPlatform?.toLowerCase()
     );
 
     // Validate link using the platform's regex
@@ -87,35 +83,6 @@ function Page() {
 
     return ""; // ✅ No error — valid link
   };
-
-  // const moveLink = (sourceId, targetId) => {
-  //   const sourceIndex = localLinks.findIndex((l) => l.linkId === sourceId);
-  //   const targetIndex = localLinks.findIndex((l) => l.linkId === targetId);
-  //   if (sourceIndex === -1 || targetIndex === -1) return;
-
-  //   const updated = [...localLinks];
-  //   const [moved] = updated.splice(sourceIndex, 1);
-  //   updated.splice(targetIndex, 0, moved);
-  //   setIsDirty(true);
-  //   console.log(localLinks);
-  //   setLocalLinks(updated);
-  // };
-
-  // const moveLink = (sourceId, targetId) => {
-  //   setLocalLinks((prev) => {
-  //     const updated = [...prev];
-  //     const sourceIndex = updated.findIndex((l) => l.linkId === sourceId);
-  //     const targetIndex = updated.findIndex((l) => l.linkId === targetId);
-  //     if (sourceIndex === -1 || targetIndex === -1) return prev;
-
-  //     const [moved] = updated.splice(sourceIndex, 1);
-  //     updated.splice(targetIndex, 0, moved);
-
-  //     console.log("Updated after move:", updated);
-  //     return updated;
-  //   });
-  //   setIsDirty(true);
-  // };
 
   const moveLink = (sourceId, targetId) => {
     setLocalLinks((prev) => {
@@ -146,12 +113,12 @@ function Page() {
     console.log("Saving:", updated);
 
     dispatch(saveLinkBatch(updated));
-    // saveLinkDB({ id, linkdetails: updated });
+    saveLinkDB({ id, linkdetails: updated });
     setIsDirty(false);
   };
 
   // 🧩 Render
-  // if (status === "pending") return <RealSpinner />;
+  if (status === "pending") return <RealSpinner />;
 
   return (
     <div className="lg:w-7/12 text-sm text-Nickel bg-white rounded-lg">

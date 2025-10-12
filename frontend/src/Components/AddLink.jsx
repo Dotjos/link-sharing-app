@@ -11,6 +11,10 @@ import { platformDetails } from "../utilitis/LinkInfo";
 
 function AddLink({ linkNum, linkId, linkData, onDelete, onMove, onUpdate }) {
   const [showDropdown, setShowDropdown] = useState(false);
+  console.log(linkData);
+  const platform = linkData?.platform;
+  const platFormMeta =
+    platformDetails.find((item) => item.platform === platform) || {};
 
   // 🟠 Drag & Drop setup
   const [{ isDragging }, drag] = useDrag(() => ({
@@ -85,10 +89,10 @@ function AddLink({ linkNum, linkId, linkData, onDelete, onMove, onUpdate }) {
         <div className="flex justify-between items-center w-full">
           <div className="flex gap-x-5 items-center">
             <img
-              src={selectedPlatform?.img || ""}
-              alt={`${selectedPlatform?.platform} icon`}
+              src={selectedPlatform?.img || platFormMeta?.img}
+              alt={`${selectedPlatform?.platform || linkData?.platform} icon`}
             />
-            <span>{selectedPlatform?.platform}</span>
+            <span>{selectedPlatform?.platform || linkData?.platform}</span>
           </div>
           {showDropdown ? (
             <MdOutlineKeyboardArrowUp className="w-6 text-2xl text-NeonBlue h-6" />

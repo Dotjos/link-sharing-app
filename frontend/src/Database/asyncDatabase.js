@@ -1,3 +1,5 @@
+import apiClient from "../lib/apiClient";
+
 export async function saveUserLinkData({ id, linkdetails }) {
   return apiClient("/userdata/links", {
     method: "POST",
@@ -5,43 +7,26 @@ export async function saveUserLinkData({ id, linkdetails }) {
   });
 }
 
-export async function saveUserData({ id, first_name, last_name, email }) {
-  return apiClient("/userdata", {
-    method: "POST",
-    body: { id, first_name, last_name, email },
+export async function saveUserData({ first_name, last_name,  }) {
+  return apiClient("/userdata/update-profile/", {
+    method: "PATCH",
+    body: {  first_name, last_name,  },
   });
 }
   
-
 export async function fetchUserData(userId) {
-  return apiClient(`/userdata/${userId}`, { method: "GET" });
+  return apiClient(`/userdata/links/${userId}`, { method: "GET" });
 }
 
-export async function uploadFile({ id, avatarFile }) {
+export async function uploadFile(imageFile) {
   const formData = new FormData();
-  formData.append("file", avatarFile);
-  formData.append("userId", id);
+  formData.append("image", imageFile);
 
-  return apiClient("/storage/upload", {
+  return apiClient("/userdata/upload-profile", {
     method: "POST",
     body: formData,
-    headers: {}, // no JSON header, FormData handles it
   });
 }
 
-export async function updateFile({ id, avatarFile }) {
-  const formData = new FormData();
-  formData.append("file", avatarFile);
-  formData.append("userId", id);
 
-  return apiClient("/storage/update", {
-    method: "PUT",
-    body: formData,
-    headers: {},
-  });
-}
-
-export async function fetchImageUrl(pathName) {
-  return apiClient(`/storage/public-url/${pathName}`, { method: "GET" });
-}
 

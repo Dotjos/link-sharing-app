@@ -4,7 +4,7 @@ import ProfileDetailsSlice from './ProfileDetailsSlice'
 
 const allReducers=combineReducers({
     LinkDetailsSlice:LinkDetailsSlice,
-        ProfileDetailsSlice:ProfileDetailsSlice
+    ProfileDetailsSlice:ProfileDetailsSlice
 })
 
 export const Store = configureStore({
