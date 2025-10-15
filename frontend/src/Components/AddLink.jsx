@@ -11,7 +11,6 @@ import { platformDetails } from "../utilitis/LinkInfo";
 
 function AddLink({ linkNum, linkId, linkData, onDelete, onMove, onUpdate }) {
   const [showDropdown, setShowDropdown] = useState(false);
-  console.log(linkData);
   const platform = linkData?.platform;
   const platFormMeta =
     platformDetails.find((item) => item.platform === platform) || {};
@@ -35,19 +34,17 @@ function AddLink({ linkNum, linkId, linkData, onDelete, onMove, onUpdate }) {
     },
   }));
 
-  // Current selected platform from data
   const selectedPlatform =
-    linkData?.platform ||
-    platformDetails.find((p) => p.platform === "GitHub") || // fallback
+    platformDetails.find((p) => p.platform === linkData?.platform) ||
+    platformDetails.find((p) => p.platform === "GitHub") ||
     platformDetails[0];
-
   // Current link input and error
   const linkInput = linkData?.linkInput || "";
   const error = linkData?.error || "";
 
   // 🧩 Platform selection
   function handlePlatformSelect(platform) {
-    onUpdate(linkId, { ...linkData, platform, error: "" });
+    onUpdate(linkId, { ...linkData, platform: platform.platform, error: "" });
     setShowDropdown(false);
   }
 
@@ -56,7 +53,7 @@ function AddLink({ linkNum, linkId, linkData, onDelete, onMove, onUpdate }) {
     const inputValue = e.target.value;
     onUpdate(linkId, {
       ...linkData,
-      platform: selectedPlatform,
+      platform: selectedPlatform?.platform,
       linkInput: inputValue,
       error: "",
     });

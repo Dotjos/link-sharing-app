@@ -1,12 +1,11 @@
 import PhoneLink from "../ui/PhoneLink";
 import { useParams } from "react-router-dom";
-import useFetchUserData from "../Database/useFetchUserData";
+import useFetchUserData from "../Hooks/useFetchUserData";
 import Spinner from "./Spinner";
 
 function LinkOverview() {
   const { userId } = useParams();
   const { userData, status } = useFetchUserData(userId);
-  // const {imageURL,status:urlStatus}= useFetchUrl(userId)
   const userLinkDetails = userData?.linkdetails;
   const firstName = userData?.first_name;
   const lastName = userData?.last_name;

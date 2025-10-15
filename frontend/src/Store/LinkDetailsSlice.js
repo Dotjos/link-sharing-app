@@ -24,7 +24,7 @@ export const LinkDetailsSlice = createSlice({
     },
 
     // ✅ Set user data from DB
-    setUserData: (state, action) => {
+    setUserLinkData: (state, action) => {
       state.LinkDetails = action.payload || [];
     },
 
@@ -45,7 +45,7 @@ export const LinkDetailsSlice = createSlice({
 export const {
   createLinkObject,
   removeLink,
-  setUserData,
+  setUserLinkData,
   saveLinkBatch,
 } = LinkDetailsSlice.actions;
 

@@ -7,7 +7,7 @@ function PhoneLink({ platform, link, background, icon }) {
 
   return (
     <div
-      className={`rounded-md ${background} cursor-pointer  justify-between flex items-center w-full h-9 my-3 text-whiteFA py-4 px-3`}
+      className={`rounded-md ${background} cursor-pointer  justify-between flex items-center w-full h-9 text-whiteFA py-4 px-3`}
       onClick={onClick}
     >
       <div className="flex gap-x-3">
