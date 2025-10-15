@@ -141,27 +141,51 @@ for (let i = 0; i < linkdetails.length; i++) {
     }
   };
   
+// export const uploadProfileImage = async (req, res) => {
+//   try {
+//     const result = req.file;
+//     if (!result || !result.path)
+//       return res.status(400).json({ error: "Image upload failed" });
+
+//     const userId = req.user.id; // from your JWT auth middleware
+//     const imageUrl = result.path;
+
+//     const updateQuery = `
+//       UPDATE users
+//       SET profile_image = $1
+//       WHERE id = $2
+//       RETURNING id, email, profile_image
+//     `;
+
+//     const { rows } = await pool.query(updateQuery, [imageUrl, userId]);
+
+//     res.status(200).json({
+//       message: "Profile image updated successfully!",
+//       user: rows[0],
+//     });
+//   } catch (error) {
+//     console.error("Upload error:", error);
+//     res.status(500).json({ error: "Server error" });
+//   }
+// };
+
+
 export const uploadProfileImage = async (req, res) => {
   try {
     const result = req.file;
-    if (!result || !result.path)
-      return res.status(400).json({ error: "Image upload failed" });
 
-    const userId = req.user.id; // from your JWT auth middleware
+    // 🧩 Validate file
+    if (!result || !result.path) {
+      return res.status(400).json({ error: "Image upload failed" });
+    }
+
+    // 🧠 Extract uploaded image URL from Cloudinary (or your upload middleware)
     const imageUrl = result.path;
 
-    const updateQuery = `
-      UPDATE users
-      SET profile_image = $1
-      WHERE id = $2
-      RETURNING id, email, profile_image
-    `;
-
-    const { rows } = await pool.query(updateQuery, [imageUrl, userId]);
-
+    // ✅ Return Cloudinary URL — no database write here
     res.status(200).json({
-      message: "Profile image updated successfully!",
-      user: rows[0],
+      message: "Image uploaded successfully!",
+      imageUrl, // frontend will later send this with other profile details
     });
   } catch (error) {
     console.error("Upload error:", error);

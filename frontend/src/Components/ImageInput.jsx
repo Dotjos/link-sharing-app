@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { PiImage } from "react-icons/pi";
 import BeadLoader from "./BeadLoader";
 import getCurrentAccountAuth from "../Async/getCurrentAccountAuth";
-import useFetchUserData from "../Database/useFetchUserData";
-import { useUploadFile } from "../Database/useUploadFile";
+import useFetchUserData from "../Hooks/useFetchUserData";
+import { useUploadFile } from "../Hooks/useUploadFile";
 
 function ImageInput({ setDimensionError }) {
   const fileInputRef = useRef(null);
