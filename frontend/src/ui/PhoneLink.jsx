@@ -12,7 +12,7 @@ function PhoneLink({ platform, link, background, icon }) {
     >
       <div className="flex gap-x-3">
         <img src={icon} className="invert brightness-0" alt={icon} />
-        <span className="text-xs">{platform}</span>
+        <span className="text-sm">{platform}</span>
       </div>
       {link && <GoArrowRight className="w-4 h-4 text-white" />}
     </div>

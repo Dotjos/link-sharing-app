@@ -7,7 +7,6 @@ function getCurrentAccountAuth (){
         queryKey: ["user"],
         queryFn:getCurrentUser,
         retry:false,
-
       })
       return {
         user,
