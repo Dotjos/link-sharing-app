@@ -7,14 +7,13 @@ import getCurrentAccountAuth from "../Async/getCurrentAccountAuth";
 function PreviewPage() {
   const { userId } = useParams();
   const { user, isAuthenticated } = getCurrentAccountAuth();
-
   const isOwner = isAuthenticated && String(userId) === String(user?.id);
 
   return (
-    <div className="bg-white relative md:bg-LavenderMist  h-screen  p-3 md:p-0 gap-5">
-      <div className="w-full h-1/3 bg-NeonBlue rounded-b-xl border-b hidden md:inline-block"></div>
+    <div className="bg-white md:bg-transparent relative p-3 md:p-0 gap-5">
+      <div className="w-full h-60 bg-NeonBlue rounded-b-xl border-b hidden md:inline-block"></div>
       {isOwner && <ProfileNav />}
-      <main>
+      <main className="">
         <LinkOverview />
       </main>
     </div>

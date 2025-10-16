@@ -18,14 +18,14 @@ function LinkOverview() {
   console.log(imageURL);
 
   return (
-    <div className="w-full md:absolute pt-5 px-6 md:px-10 text-center md:top-24 lg:top-32 ">
+    <div className="w-full md:absolute pt-5 px-6 md:px-10 text-center md:top-32">
       {status === "pending" && <Spinner />}
 
       {status === "success" && (
         <div className="">
-          <div className="bg-white h-full flex flex-col w-full ml-auto mr-auto md:w-1/3 p-7 rounded-lg">
+          <div className="bg-white md:mb-10 md:shadow-xl h-full flex flex-col w-full ml-auto mr-auto md:w-2/5 lg:w-1/4 py-10 px-3 md:p-10 rounded-3xl">
             <div
-              className="border-2 border-NeonBlue rounded-full mb-6 w-20 h-20 md:w-2/5 lg:w-1/3 ml-auto mr-auto"
+              className="border-2 border-NeonBlue rounded-full mb-6 w-20 h-20  ml-auto mr-auto"
               style={{
                 backgroundImage: imageURL ? `url(${imageURL})` : "none",
                 backgroundSize: "cover",
@@ -38,11 +38,11 @@ function LinkOverview() {
                 </span>
               )}
             </div>
-            <h1 className="text-DarkCharcoal text-xl ff font-extrabold">
+            <h1 className="text-DarkCharcoal text-xl font-instrumentSansBold">
               {firstName} {lastName}
             </h1>
-            <span className="text-xs mt-3 mb-8 text-Nickel">{email}</span>
-            <div className="mt-3">
+            <span className="text-sm mt-3 mb-8 text-Nickel">{email}</span>
+            <div className="mt-3 flex flex-col gap-y-3">
               {userLinkDetails?.map((link, index) => {
                 const details = link?.details;
                 if (
@@ -62,7 +62,8 @@ function LinkOverview() {
                   <PhoneLink
                     key={index}
                     platform={link.details.platform}
-                    link={link.details.link}
+                    link={link.details.linkInput}
+                    overview={true}
                     background={platformMeta?.color}
                     icon={platformMeta?.img}
                   />
