@@ -24,6 +24,9 @@ function Page() {
   const { userData, status } = useFetchUserData(id);
   const { saveLinkDB, saveLinkStatus } = useSaveLinkData();
 
+  //local links iteration
+  //then render the dropdown options excluding the already selected platforms
+
   // 🧭 Load user data into local state
   useEffect(() => {
     console.log(userData);
@@ -163,6 +166,7 @@ function Page() {
                 onMove={moveLink}
                 onDelete={() => handleDeleteLink(link.linkId)}
                 onUpdate={handleUpdateLink}
+                links={localLinks} // 👈 Pass all links for context
               />
             ))}
         </div>

@@ -1,7 +1,7 @@
 // export default AddLink;
 import SignInput from "../ui/SignInput";
 import Platform from "../ui/Platform";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   MdOutlineKeyboardArrowDown,
   MdOutlineKeyboardArrowUp,
@@ -9,7 +9,15 @@ import {
 import { useDrag, useDrop } from "react-dnd";
 import { platformDetails } from "../utilitis/LinkInfo";
 
-function AddLink({ linkNum, linkId, linkData, onDelete, onMove, onUpdate }) {
+function AddLink({
+  linkNum,
+  linkId,
+  linkData,
+  onDelete,
+  onMove,
+  onUpdate,
+  links,
+}) {
   const [showDropdown, setShowDropdown] = useState(false);
   const platform = linkData?.platform;
   const platFormMeta =
@@ -33,6 +41,17 @@ function AddLink({ linkNum, linkId, linkData, onDelete, onMove, onUpdate }) {
       onMove(draggedItem.linkId, linkId);
     },
   }));
+
+  // Platforms already selected in other links
+  const selectedPlatforms = links
+    .map((l) => l.details.platform)
+    .filter(Boolean); // removes undefined or empty
+
+  const availablePlatforms = platformDetails.filter(
+    (platf) =>
+      !selectedPlatforms.includes(platf.platform) || // not already used
+      platf.platform === linkData?.platform // allow reselecting current
+  );
 
   const selectedPlatform =
     platformDetails.find((p) => p.platform === linkData?.platform) ||
@@ -58,6 +77,18 @@ function AddLink({ linkNum, linkId, linkData, onDelete, onMove, onUpdate }) {
       error: "",
     });
   }
+
+  console.log(selectedPlatforms, "already selected platforms");
+
+  useEffect(() => {
+    if (!linkData?.platform && availablePlatforms.length > 0) {
+      onUpdate(linkId, {
+        ...linkData,
+        platform: availablePlatforms[0].platform,
+        error: "",
+      });
+    }
+  }, [availablePlatforms]);
 
   return (
     <div
@@ -102,7 +133,7 @@ function AddLink({ linkNum, linkId, linkData, onDelete, onMove, onUpdate }) {
       {/* Platform list */}
       {showDropdown && (
         <ul className="bg-white p-2 rounded-lg shadow">
-          {platformDetails.map((platf, index) => (
+          {/* {platformDetails.map((platf, index) => (
             <li
               key={index}
               className="py-2 border-b last:border-none hover:bg-LavenderMist cursor-pointer"
@@ -114,7 +145,45 @@ function AddLink({ linkNum, linkId, linkData, onDelete, onMove, onUpdate }) {
                 handleSelected={() => handlePlatformSelect(platf)}
               />
             </li>
-          ))}
+          ))} */}
+
+          {/* {platformDetails
+            .filter(
+              (platf) =>
+                !selectedPlatforms.includes(platf.platform) || // not already used
+                platf.platform === linkData?.platform // allow reselecting current
+            )
+            .map((platf, index) => (
+              <li
+                key={index}
+                className="py-2 border-b last:border-none hover:bg-LavenderMist cursor-pointer"
+                onClick={() => handlePlatformSelect(platf)}
+              >
+                <Platform
+                  platform={platf.platform}
+                  icon={platf.img}
+                  handleSelected={() => handlePlatformSelect(platf)}
+                />
+              </li>
+            ))} */}
+
+          {
+            <ul className="bg-white p-2 rounded-lg shadow">
+              {availablePlatforms.map((platf, index) => (
+                <li
+                  key={index}
+                  className="py-2 border-b last:border-none hover:bg-LavenderMist cursor-pointer"
+                  onClick={() => handlePlatformSelect(platf)}
+                >
+                  <Platform
+                    platform={platf.platform}
+                    icon={platf.img}
+                    handleSelected={() => handlePlatformSelect(platf)}
+                  />
+                </li>
+              ))}
+            </ul>
+          }
         </ul>
       )}
 
