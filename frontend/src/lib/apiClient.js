@@ -1,8 +1,7 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-async function apiClient(path, { method = "GET", body, headers = {} } = {}) {
-  const token = localStorage.getItem("token"); 
-
+export default async function apiClient(path, { method = "GET", body, headers = {} } = {}) {
+  const token = localStorage.getItem("token");
   const isFormData = body instanceof FormData;
 
   const options = {
@@ -13,10 +12,18 @@ async function apiClient(path, { method = "GET", body, headers = {} } = {}) {
       ...headers,
     },
     body: isFormData ? body : body ? JSON.stringify(body) : undefined,
+    credentials:"include"
   };
 
   try {
     const response = await fetch(`${API_BASE_URL}${path}`, options);
+
+    // Handle unauthorized access (likely user logged out or token manually removed)
+    if (response.status === 401) {
+      localStorage.removeItem("token");
+      window.location.href = "/";
+      return;
+    }
 
     let data;
     try {
@@ -40,7 +47,3 @@ async function apiClient(path, { method = "GET", body, headers = {} } = {}) {
       : { status: 500, error: err.message || "Network or server error" };
   }
 }
-
-export default apiClient;
-
-
