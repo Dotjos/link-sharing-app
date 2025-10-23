@@ -25,14 +25,14 @@ function LinkOverview() {
         <div className="">
           <div className="bg-white md:mb-10 md:shadow-xl h-full flex flex-col w-full ml-auto mr-auto md:w-2/5 lg:w-1/4 py-10 px-3 md:p-10 rounded-3xl">
             <div
-              className="border-2 border-NeonBlue rounded-full mb-6 w-20 h-20  ml-auto mr-auto"
+              className="border-2 border-NeonBlue flex items-center justify-center rounded-full mb-6 w-20 h-20  ml-auto mr-auto"
               style={{
                 backgroundImage: imageURL ? `url(${imageURL})` : "none",
                 backgroundSize: "cover",
               }}
             >
               {!imageURL && (
-                <span className="font-instrumentSansSemiBold">
+                <span className="text-2xl font-instrumentSansSemiBold">
                   {firstName.charAt(0)}
                   {lastName.charAt(0)}
                 </span>

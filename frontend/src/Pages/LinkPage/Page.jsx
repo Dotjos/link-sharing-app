@@ -21,8 +21,12 @@ function Page() {
   // 🟩 Auth + DB hooks
   const { user } = getCurrentAccountAuth();
   const id = user?.id;
+  console.log(id);
   const { userData, status } = useFetchUserData(id);
   const { saveLinkDB, saveLinkStatus } = useSaveLinkData();
+
+  console.log(userData);
+  console.log(status);
 
   //local links iteration
   //then render the dropdown options excluding the already selected platforms

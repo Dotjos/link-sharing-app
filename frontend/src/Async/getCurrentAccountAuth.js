@@ -11,7 +11,6 @@ function getCurrentAccountAuth (){
       return {
         user,
         status,
-        isAuthenticated: !!user, // ✅ check if a user object exists
       };
 }
 
