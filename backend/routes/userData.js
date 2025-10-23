@@ -7,8 +7,8 @@ const router = express.Router();
 
 router.post("/links", saveUserLinks);
 router.get("/links/:userId", getUserLinks);
-//upload profile image route
 
+//upload profile image route
 router.post("/upload-profile",authenticateToken,upload.single("image"),uploadProfileImage)
 
 router.patch("/update-profile/",authenticateToken, updateUserProfile);

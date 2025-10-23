@@ -11,7 +11,6 @@ export const ProfileDetailsSlice = createSlice({
   reducers: {
     updateProfileDetails: (state, action) => {
       const { firstName, lastName, email, imgURL } = action.payload;
-      console.log(action.payload);
 
       if (firstName !== undefined) state.firstName = firstName;
       if (lastName !== undefined) state.lastName = lastName;

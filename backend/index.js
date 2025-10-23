@@ -1,9 +1,10 @@
 import express from "express";
 import dotenv from "dotenv"
 import authRoutes from "./routes/auth.js"
+import cookieParser from "cookie-parser";
 import userDataRoutes from "./routes/userData.js";
 import cors from "cors"
-import pool from "./database.js";
+// import pool from "./database.js";
 
 //load env variables
 dotenv.config()
@@ -11,10 +12,12 @@ dotenv.config()
 const app = express()
 
 //Middleware
-app.use(cors())
 app.use(express.json())
-
-
+app.use(cookieParser())
+app.use(cors({
+    origin:"http://localhost:5173",
+    credentials:true
+}))
 
 //Routes
 app.use('/userdata', userDataRoutes);

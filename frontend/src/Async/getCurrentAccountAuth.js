@@ -7,12 +7,10 @@ function getCurrentAccountAuth (){
         queryKey: ["user"],
         queryFn:getCurrentUser,
         retry:false,
-
       })
       return {
         user,
         status,
-        isAuthenticated: !!user, // ✅ check if a user object exists
       };
 }
 

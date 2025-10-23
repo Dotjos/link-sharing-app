@@ -5,31 +5,46 @@ import StartLnkPage from "../../Components/StartLnkPage";
 import AddLink from "../../Components/AddLink";
 import RealSpinner from "../../Components/RealSpinner";
 import { generateRandomId } from "../../utilis/generateId";
-import { setUserData, saveLinkBatch } from "../../Store/LinkDetailsSlice";
+import { setUserLinkData, saveLinkBatch } from "../../Store/LinkDetailsSlice";
 import getCurrentAccountAuth from "../../Async/getCurrentAccountAuth";
-import useSaveLinkData from "../../Database/useSaveLinkData";
-import useFetchUserData from "../../Database/useFetchUserData";
+import useSaveLinkData from "../../Hooks/useSaveLinkData";
+import useFetchUserData from "../../Hooks/useFetchUserData";
 import { platformDetails } from "../../utilitis/LinkInfo";
+import { updateProfileDetails } from "../../Store/ProfileDetailsSlice";
 
 function Page() {
   const dispatch = useDispatch();
-
   // 🟦 Local state for temporary link management
   const [localLinks, setLocalLinks] = useState([]);
   const [isDirty, setIsDirty] = useState(false);
-
+  console.log(localLinks);
   // 🟩 Auth + DB hooks
   const { user } = getCurrentAccountAuth();
   const id = user?.id;
+  console.log(id);
   const { userData, status } = useFetchUserData(id);
   const { saveLinkDB, saveLinkStatus } = useSaveLinkData();
+
+  console.log(userData);
+  console.log(status);
+
+  //local links iteration
+  //then render the dropdown options excluding the already selected platforms
 
   // 🧭 Load user data into local state
   useEffect(() => {
     console.log(userData);
     if (status === "success" && userData.links) {
       setLocalLinks(userData.links);
-      dispatch(setUserData(userData.links));
+      dispatch(setUserLinkData(userData.links));
+      dispatch(
+        updateProfileDetails({
+          email: userData.user.email || "",
+          firstName: userData.user.firstName || "",
+          lastName: userData.user.lastName || "",
+          imgURL: userData.user.profileImage || "",
+        })
+      );
     }
   }, [status, userData, dispatch]);
 
@@ -64,16 +79,20 @@ function Page() {
   };
 
   const validateLink = (selectedPlatform, link) => {
+    console.log(selectedPlatform);
     // Handle empty input
     if (!link || link.trim() === "") {
       // setError("Link cannot be empty.");
       return "Link cannot be empty.";
     }
 
+    console.log(selectedPlatform, link);
     // Find platform in platformDetails
     const platformData = platformDetails.find(
       (p) => p.platform.toLowerCase() === selectedPlatform?.toLowerCase()
     );
+
+    console.log(platformData);
 
     // Validate link using the platform's regex
     if (!platformData.platFormat.test(link)) {
@@ -102,6 +121,7 @@ function Page() {
 
   const handleSave = () => {
     const updated = localLinks.map((link) => {
+      console.log(localLinks);
       const error = validateLink(link.details.platform, link.details.linkInput);
       return { ...link, details: { ...link.details, error } };
     });
@@ -150,6 +170,7 @@ function Page() {
                 onMove={moveLink}
                 onDelete={() => handleDeleteLink(link.linkId)}
                 onUpdate={handleUpdateLink}
+                links={localLinks} // 👈 Pass all links for context
               />
             ))}
         </div>
@@ -159,7 +180,6 @@ function Page() {
         <SaveButton
           onClick={handleSave}
           disabled={saveLinkStatus === "pending" || !isDirty}
-          small={true}
           notTooSmall={true}
           text={saveLinkStatus === "pending" ? "Saving..." : "Save"}
         />

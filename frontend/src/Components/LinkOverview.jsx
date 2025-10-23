@@ -1,65 +1,74 @@
 import PhoneLink from "../ui/PhoneLink";
 import { useParams } from "react-router-dom";
-import useFetchUserData from "../Database/useFetchUserData";
+import useFetchUserData from "../Hooks/useFetchUserData";
 import Spinner from "./Spinner";
+import { platformDetails } from "../utilitis/LinkInfo";
 
 function LinkOverview() {
   const { userId } = useParams();
   const { userData, status } = useFetchUserData(userId);
-  // const {imageURL,status:urlStatus}= useFetchUrl(userId)
-  const userLinkDetails = userData?.linkdetails;
-  const firstName = userData?.first_name;
-  const lastName = userData?.last_name;
-  const email = userData?.email;
+  const userLinkDetails = userData?.links;
+  const firstName = userData?.user.firstName;
+  const lastName = userData?.user.lastName;
+  const email = userData?.user.email;
+  const imageURL = userData?.user.profileImage;
 
+  console.log(userData);
   console.log(userLinkDetails);
-
-  const refinedUserLinkDetails = userLinkDetails?.filter((item) => {
-    return (
-      item.details &&
-      typeof item.details === "object" &&
-      Object.keys(item.details).length &&
-      !item.details.error &&
-      item.details.linkInput !== ""
-    );
-  });
-
-  console.log(refinedUserLinkDetails);
+  console.log(imageURL);
 
   return (
-    <div className="w-full md:absolute pt-7 px-6 md:px-10 text-center md:top-24 lg:top-32 ">
+    <div className="w-full md:absolute pt-5 px-6 md:px-10 text-center md:top-32">
       {status === "pending" && <Spinner />}
+
       {status === "success" && (
         <div className="">
-          <div className="bg-white h-full w-full ml-auto mr-auto md:w-1/3 p-7 rounded-lg">
+          <div className="bg-white md:mb-10 md:shadow-xl h-full flex flex-col w-full ml-auto mr-auto md:w-2/5 lg:w-1/4 py-10 px-3 md:p-10 rounded-3xl">
             <div
-              className="border-2 border-NeonBlue rounded-full p-16 w-2/4 md:w-2/5 lg:w-1/3 ml-auto mr-auto"
+              className="border-2 border-NeonBlue flex items-center justify-center rounded-full mb-6 w-20 h-20  ml-auto mr-auto"
               style={{
                 backgroundImage: imageURL ? `url(${imageURL})` : "none",
                 backgroundSize: "cover",
               }}
             >
-              {(!imageURL || urlStatus === "error") && (
-                <span className="font-instrumentSansSemiBold">
+              {!imageURL && (
+                <span className="text-2xl font-instrumentSansSemiBold">
                   {firstName.charAt(0)}
                   {lastName.charAt(0)}
                 </span>
               )}
             </div>
-            <h1 className="text-DarkCharcoal text-3xl">
+            <h1 className="text-DarkCharcoal text-xl font-instrumentSansBold">
               {firstName} {lastName}
             </h1>
-            <span className="t text-Nickel">{email}</span>
-            <div>
-              {refinedUserLinkDetails?.map((link, index) => (
-                <PhoneLink
-                  key={index}
-                  platform={link.details.platform}
-                  link={link.details.link}
-                  background={link.details.color}
-                  icon={link.details.img}
-                />
-              ))}
+            <span className="text-sm mt-3 mb-8 text-Nickel">{email}</span>
+            <div className="mt-3 flex flex-col gap-y-3">
+              {userLinkDetails?.map((link, index) => {
+                const details = link?.details;
+                if (
+                  !details ||
+                  typeof details !== "object" ||
+                  !details.platform ||
+                  !details.linkInput
+                ) {
+                  return null; // skip invalid entries safely
+                }
+
+                // Get metadata for the platform
+                const platformMeta = platformDetails.find(
+                  (item) => item.platform === details.platform
+                );
+                return (
+                  <PhoneLink
+                    key={index}
+                    platform={link.details.platform}
+                    link={link.details.linkInput}
+                    overview={true}
+                    background={platformMeta?.color}
+                    icon={platformMeta?.img}
+                  />
+                );
+              })}
             </div>
           </div>
         </div>

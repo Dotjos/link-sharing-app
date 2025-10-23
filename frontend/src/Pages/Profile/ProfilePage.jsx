@@ -3,26 +3,30 @@ import ImageInput from "../../Components/ImageInput";
 import Input from "../../Components/Input";
 import SaveButton from "../../Components/SaveButton";
 import { useDispatch, useSelector } from "react-redux";
-import useSaveData from "../../Database/useSaveData";
+import useSaveData from "../../Hooks/useSaveData";
 import getCurrentAccountAuth from "../../Async/getCurrentAccountAuth";
-import useFetchUserData from "../../Database/useFetchUserData";
+import useFetchUserData from "../../Hooks/useFetchUserData";
 import { useEffect } from "react";
 import { updateProfileDetails } from "../../Store/ProfileDetailsSlice";
+import { setUserLinkData } from "../../Store/LinkDetailsSlice";
 
 function ProfilePage() {
   const profileDetails = useSelector((state) => state.ProfileDetailsSlice);
-  console.log(profileDetails);
+  // console.log(profileDetails);
   const {
     firstName: reduxFirstName,
     lastName: reduxLastName,
     email: reduxEmail,
+    imgURL: reduxImgURL,
   } = profileDetails;
+  console.log(reduxFirstName, reduxLastName, reduxImgURL);
   const [dimensionError, setDimensionError] = useState(false);
-  const [imgSrc, setImgSrc] = useState(null);
   const { user } = getCurrentAccountAuth();
+  const [dirty, setDirty] = useState(false); // 🟢 Track unsaved changes
   const id = user?.id;
   const dispatch = useDispatch();
   const { userData } = useFetchUserData(id, dispatch);
+  const [imgSrc, setImgSrc] = useState(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -30,26 +34,36 @@ function ProfilePage() {
     firstName: "",
     lastName: "",
   });
-  const { saveDB } = useSaveData();
-
-  useEffect(
-    function () {
-      if (userData) {
-        console.log(userData);
-        dispatch(updateProfileDetails({ email: userData.user.email || "" }));
-        setEmail(reduxEmail || "");
-      }
-    },
-    [userData]
-  );
+  const { saveDB, status } = useSaveData();
 
   useEffect(() => {
-    if (reduxFirstName || reduxLastName) {
-      setFirstName(reduxFirstName);
-      setLastName(reduxLastName);
-      setImgSrc(profileDetails.imgURL);
+    if (userData) {
+      const user = userData.user;
+      dispatch(
+        updateProfileDetails({
+          email: user.email || "",
+          firstName: user.firstName || "",
+          lastName: user.lastName || "",
+          imgURL: user.profileImage || "",
+        })
+      );
+      dispatch(setUserLinkData(userData.links || []));
+
+      setFirstName(user.firstName || "");
+      setLastName(user.lastName || "");
+      setEmail(user.email || "");
+      setImgSrc(user.profileImage || "");
+      setDirty(false);
     }
-  }, [reduxFirstName, reduxLastName, profileDetails.imgURL]);
+  }, [userData, dispatch]);
+
+  useEffect(() => {
+    const isDirty =
+      firstName !== reduxFirstName ||
+      lastName !== reduxLastName ||
+      imgSrc !== reduxImgURL;
+    setDirty(isDirty);
+  }, [firstName, lastName, imgSrc, reduxFirstName, reduxLastName, reduxImgURL]);
 
   function handleFirstNameChange(e) {
     setFirstName(e.target.value);
@@ -83,6 +97,7 @@ function ProfilePage() {
     setErrors({ firstName: "", lastName: "" });
     console.log(firstName, lastName);
     saveDB({ first_name: firstName, last_name: lastName });
+    setDirty(false);
   }
 
   return (
@@ -140,8 +155,6 @@ function ProfilePage() {
             label="Email"
             value={email}
             onChange={() => {}}
-            // asteriks={true}
-            // errText={errors.email}
             id="Email"
             placeholder="e.g.email@example.com"
           />
@@ -153,18 +166,9 @@ function ProfilePage() {
           text="Save"
           onClick={handleSave}
           notTooSmall={true}
-          active={true}
+          disabled={!dirty || dimensionError || status === "pending"}
         />
       </div>
-
-      {/* <div className="px-4 py-2.5 flex  justify-end">
-        <SaveButton
-          text="Sign out"
-          notTooSmall={true}
-          onClick={logOut}
-          disabled={logOutStatus === "pending"}
-        />
-      </div> */}
     </div>
   );
 }

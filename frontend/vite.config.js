@@ -6,6 +6,6 @@ export default defineConfig({
   plugins: [react()],
   define:{
     VITE_APP_URL : JSON.stringify(process.env.VITE_APP_URL),
-    VITE_SUPABASE_KEY : JSON.stringify(process.env.VITE_SUPABASE_KEY)
+    // VITE_SUPABASE_KEY : JSON.stringify(process.env.VITE_SUPABASE_KEY)
   }
 })

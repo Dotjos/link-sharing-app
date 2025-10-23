@@ -32,7 +32,15 @@ export default {
         instrumentSansSemiBold:['Instrument Sans SemiBold',"Arial", "sans-serif"],
         instrumentSansItalicVariable:['Instrument Sans Italic Variable',"Arial", "sans-serif"],         
         instrumentSansVariable:['Instrument Sans Variable',"Arial", "sans-serif"]
-      }
+      },
+      keyframes: {
+        shimmer: {
+          "100%": { transform: "translateX(100%)" },
+        },  },
+        animation: {
+          shimmer: "shimmer 1.5s infinite",
+        },
+
     },
     
   },
