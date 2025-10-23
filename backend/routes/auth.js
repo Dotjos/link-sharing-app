@@ -1,5 +1,5 @@
 import express from "express"
-import { getCurrentUser, login, signUp, verifyAccount } from "../controllers/authControllers.js"
+import { getCurrentUser, login, refreshToken, signUp, verifyAccount } from "../controllers/authControllers.js"
 import { authenticateToken } from "../middleware/authMiddleware.js"
 const router= express.Router()
 
@@ -9,10 +9,13 @@ router.post("/signup",signUp)
   // ---------- Login ----------
 router.post("/login",login)
 
-//verify
+  //verify
 router.get("/verify",verifyAccount)
 
-//getCurrentUser
+  //getCurrentUser
 router.get("/me",authenticateToken,getCurrentUser)
 
-export default router
+//logout
+router.post("/refresh", refreshToken); // ✅ NEW endpoint
+
+export default router;
