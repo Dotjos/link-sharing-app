@@ -1,10 +1,12 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import LinkDetailsSlice from './LinkDetailsSlice'
 import ProfileDetailsSlice from './ProfileDetailsSlice'
+import AuthSlice from "./AuthSlice"
 
 const allReducers=combineReducers({
     LinkDetailsSlice:LinkDetailsSlice,
-    ProfileDetailsSlice:ProfileDetailsSlice
+    ProfileDetailsSlice:ProfileDetailsSlice,
+    AuthSlice:AuthSlice 
 })
 
 export const Store = configureStore({
