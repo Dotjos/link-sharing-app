@@ -7,10 +7,10 @@ export async function saveUserLinkData({ id, linkdetails }) {
   });
 }
 
-export async function saveUserData({ first_name, last_name,  }) {
+export async function saveUserData({ first_name, last_name  }) {
   return apiClient("/userdata/update-profile/", {
     method: "PATCH",
-    body: {  first_name, last_name,  },
+    body: {  first_name, last_name },
   });
 }
   
