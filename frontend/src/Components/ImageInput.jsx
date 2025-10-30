@@ -4,16 +4,24 @@ import BeadLoader from "./BeadLoader";
 import getCurrentAccountAuth from "../Async/getCurrentAccountAuth";
 import useFetchUserData from "../Hooks/useFetchUserData";
 import { useUploadFile } from "../Hooks/useUploadFile";
+import {
+  ProfileDetailsSlice,
+  updateProfileDetails,
+} from "../Store/ProfileDetailsSlice";
+import { useDispatch, useSelector } from "react-redux";
 
-function ImageInput({ setDimensionError }) {
+function ImageInput({ setDimensionError, imgSrc, setImgSrc, setDirty }) {
   const fileInputRef = useRef(null);
-  const [imgSrc, setImgSrc] = useState(null);
   const [loading, setLoading] = useState(false);
   const { user } = getCurrentAccountAuth();
   const userId = user?.id;
+  const dispatch = useDispatch();
   // ✅ Fetch current image on component mount
   const { userData } = useFetchUserData(userId);
-  const { uploadImage, uploadStatus } = useUploadFile(imgSrc);
+  const { uploadImage, uploadStatus } = useUploadFile();
+
+  const profileDetails = useSelector((state) => state.ProfileDetailsSlice);
+  console.log(profileDetails);
 
   useEffect(() => {
     if (userData?.user?.profileImage) {
@@ -24,22 +32,43 @@ function ImageInput({ setDimensionError }) {
   // ✅ Upload image handler
   async function handleImageChange(event) {
     const file = event.target.files[0];
+    console.log(file);
     if (!file) return;
 
+    // ✅ Show instant preview
+    const previewURL = URL.createObjectURL(file);
+    setImgSrc(previewURL);
+    console.log(previewURL);
+
+    // ✅ Validate dimensions
     const isValid = await isImageBelowMaxDimensions(file, 1024, 1024);
     if (!isValid) {
       setDimensionError(true);
       return;
     }
+    console.log(isValid);
     setDimensionError(false);
-
-    // Upload file to backend → Cloudinary → DB
     setLoading(true);
+
     try {
+      // ✅ Upload in background
       const res = await uploadImage(file);
-      if (res?.url) setImgSrc(res.url);
-      console.log("uploadStatus", uploadStatus);
-      console.log(imgSrc);
+      console.log("upload response:", res);
+      console.log("res:", res);
+      console.log("res?.imageUrl:", res?.imageUrl);
+      console.log("typeof res?.imageUrl:", typeof res?.imageUrl);
+
+      const newImageUrl = res?.imageUrl;
+
+      if (newImageUrl) {
+        // ✅ Replace preview with actual uploaded Cloudinary URL
+        console.log("new Image trig");
+        setImgSrc(newImageUrl);
+        console.log("dispatch triggered");
+        dispatch(updateProfileDetails({ imgURL: newImageUrl }));
+        console.log("setDirty triggered");
+        setDirty(true);
+      }
     } catch (err) {
       console.error("Image upload failed:", err);
     } finally {
@@ -71,7 +100,7 @@ function ImageInput({ setDimensionError }) {
         <div
           className="absolute inset-0 flex z-0 items-center justify-center"
           style={{
-            backgroundImage: `url(${imgSrc}?v=${Date.now()})`,
+            backgroundImage: `url(${imgSrc}`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
