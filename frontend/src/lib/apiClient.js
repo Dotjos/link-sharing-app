@@ -19,7 +19,7 @@ export default async function apiClient(path, { method = "GET", body, headers = 
     const response = await fetch(`${API_BASE_URL}${path}`, options);
 
     // Handle unauthorized access (likely user logged out or token manually removed)
-    if (response.status === 401) {
+    if (response.status === 403) {
       localStorage.removeItem("token");
       window.location.href = "/";
       return;

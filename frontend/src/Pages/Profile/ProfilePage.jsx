@@ -12,11 +12,10 @@ import { setUserLinkData } from "../../Store/LinkDetailsSlice";
 
 function ProfilePage() {
   const profileDetails = useSelector((state) => state.ProfileDetailsSlice);
-  // console.log(profileDetails);
+  console.log(profileDetails);
   const {
     firstName: reduxFirstName,
     lastName: reduxLastName,
-    email: reduxEmail,
     imgURL: reduxImgURL,
   } = profileDetails;
   console.log(reduxFirstName, reduxLastName, reduxImgURL);
@@ -30,6 +29,7 @@ function ProfilePage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+
   const [errors, setErrors] = useState({
     firstName: "",
     lastName: "",
@@ -48,7 +48,6 @@ function ProfilePage() {
         })
       );
       dispatch(setUserLinkData(userData.links || []));
-
       setFirstName(user.firstName || "");
       setLastName(user.lastName || "");
       setEmail(user.email || "");
@@ -65,6 +64,9 @@ function ProfilePage() {
     setDirty(isDirty);
   }, [firstName, lastName, imgSrc, reduxFirstName, reduxLastName, reduxImgURL]);
 
+  console.log(dirty);
+  console.log(imgSrc);
+
   function handleFirstNameChange(e) {
     setFirstName(e.target.value);
   }
@@ -73,7 +75,7 @@ function ProfilePage() {
     setLastName(e.target.value);
   }
 
-  function validateProfile({ firstName, lastName, email }) {
+  function validateProfile({ firstName, lastName }) {
     const errors = {};
 
     if (!firstName.trim()) errors.firstName = "Can't be blank.";
@@ -84,7 +86,6 @@ function ProfilePage() {
 
   function handleSave() {
     const validationErrors = validateProfile({ firstName, lastName });
-    console.log(firstName, lastName);
 
     // ✅ If there are any validation errors, don't proceed
     if (Object.keys(validationErrors).length > 0) {
@@ -115,6 +116,7 @@ function ProfilePage() {
               setDimensionError={setDimensionError}
               imgSrc={imgSrc}
               setImgSrc={setImgSrc}
+              setDirty={setDirty}
             />
           </div>
           <p
