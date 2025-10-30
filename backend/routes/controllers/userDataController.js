@@ -1,3 +1,4 @@
+import cloudinary from "../../cloudinaryConfig.js";
 import pool from "../../database.js";
 
 export async function saveUserLinks(req, res) {
@@ -46,7 +47,7 @@ for (let i = 0; i < linkdetails.length; i++) {
   }
 }
 
-  export async function getUserLinks(req, res) {
+export async function getUserLinks(req, res) {
     const { userId } = req.params;
   
     if (!userId) {
@@ -94,11 +95,11 @@ for (let i = 0; i < linkdetails.length; i++) {
       console.error("Error fetching user data and links:", error);
       res.status(500).json({ message: "Error fetching user data" });
     }
-  }
+}
 
   export const updateUserProfile = async (req, res) => {
     try {
-      const { first_name, last_name, imgURL } = req.body;
+      const { first_name, last_name } = req.body;
       const id= req.user.id
   
       if (!id) {
@@ -117,14 +118,11 @@ for (let i = 0; i < linkdetails.length; i++) {
         UPDATE users
         SET first_name = $1,
             last_name = $2
-            ${imgURL ? ", profile_image = $3" : ""}
-        WHERE id = $${imgURL ? 4 : 3}
-        RETURNING id, first_name, last_name, profile_image;
+        WHERE id = $3
+        RETURNING id, first_name, last_name
       `;
   
-      const values = imgURL
-        ? [first_name, last_name, imgURL, id]
-        : [first_name, last_name, id];
+      const values =  [first_name, last_name, id];
   
       const { rows } = await pool.query(query, values);
   
@@ -141,28 +139,66 @@ for (let i = 0; i < linkdetails.length; i++) {
     }
   };
   
-export const uploadProfileImage = async (req, res) => {
-  try {
-    const result = req.file;
 
-    // 🧩 Validate file
-    if (!result || !result.path) {
+
+export const updateProfileImage = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    const file = req.file;
+
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    if (!file || !file.path) {
       return res.status(400).json({ error: "Image upload failed" });
     }
 
-    // 🧠 Extract uploaded image URL from Cloudinary (or your upload middleware)
-    const imageUrl = result.path;
+    // Get current image from DB (to delete later if exists)
+    const { rows: oldUserRows } = await pool.query(
+      "SELECT profile_image FROM users WHERE id = $1",
+      [userId]
+    );
 
-    console.log(imageUrl);
-    // ✅ Return Cloudinary URL — no database write here
+    if (oldUserRows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const oldImageUrl = oldUserRows[0]?.profile_image;
+    const newImageUrl = file.path; // Cloudinary secure URL
+
+    // ✅ Delete old image from Cloudinary if it exists
+    if (oldImageUrl) {
+      try {
+        // Extract public ID from the URL (e.g. user_profiles/abc123)
+        const parts = oldImageUrl.split("/");
+        const fileName = parts.pop(); // e.g. abc123.jpg
+        const folderName = parts.slice(-2, -1)[0]; // e.g. user_profiles
+        const publicId = `${folderName}/${fileName.split(".")[0]}`;
+
+        await cloudinary.uploader.destroy(publicId);
+      } catch (err) {
+        console.warn("Failed to delete old image from Cloudinary:", err.message);
+      }
+    }
+
+    // ✅ Update DB with new image URL
+    const updateQuery = `
+      UPDATE users
+      SET profile_image = $1
+      WHERE id = $2
+      RETURNING id, first_name, last_name, email, profile_image;
+    `;
+    const { rows } = await pool.query(updateQuery, [newImageUrl, userId]);
+
     res.status(200).json({
-      message: "Image uploaded successfully!",
-      imageUrl, // frontend will later send this with other profile details
+      message: "Profile image updated successfully",
+      user: rows[0],
     });
   } catch (error) {
-    console.log(error);
-    console.error("Upload error:", error);
-    res.status(500).json({ error: "Server error" });
+    console.error("Error updating profile image:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
